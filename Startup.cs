@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationStatusMonitor.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,8 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace IpDump
+namespace ApplicationStatusMonitor
 {
    public class Startup
    {
@@ -26,6 +28,11 @@ namespace IpDump
       public void ConfigureServices(IServiceCollection services)
       {
          services.AddControllers();
+         
+         services.Configure<StatusMonitorDatabaseSettings>( Configuration.GetSection(nameof(StatusMonitorDatabaseSettings)));
+         services.AddSingleton<IStatusMonitorDatabaseSettings>( sp => sp.GetRequiredService<IOptions<StatusMonitorDatabaseSettings>>().Value);
+
+         services.AddTransient<IStatusRepository<StatusMonitorReply>, StatusMonitorMongoRepository<StatusMonitorReply>>();
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,11 +43,11 @@ namespace IpDump
             app.UseDeveloperExceptionPage();
          }
 
-         app.UseHttpsRedirection();
+         //app.UseHttpsRedirection();
 
          app.UseRouting();
 
-         app.UseAuthorization();
+         //app.UseAuthorization();
 
          
          app.UseEndpoints(endpoints =>

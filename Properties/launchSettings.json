@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IpDump": {
+    "StatusMonitor": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",
