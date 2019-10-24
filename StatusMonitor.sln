@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusMonitor.Agent", "Stat
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusMonitor.Client", "StatusMonitor.Client\StatusMonitor.Client.csproj", "{C11B8D85-454E-4363-AB3D-9CF372D811F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusMonitor.Client", "StatusMonitor.Client\StatusMonitor.Client.csproj", "{C11B8D85-454E-4363-AB3D-9CF372D811F5}"
+
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

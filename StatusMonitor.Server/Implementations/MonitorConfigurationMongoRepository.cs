@@ -1,5 +1,7 @@
+
 using System.Collections.Generic;
 using ApplicationStatusMonitor.Controllers;
+
 using MongoDB.Driver;
 
 namespace ApplicationStatusMonitor

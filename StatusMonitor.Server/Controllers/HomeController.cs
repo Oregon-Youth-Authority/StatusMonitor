@@ -60,7 +60,6 @@ namespace ApplicationStatusMonitor.Controllers
 
         return reply;
       }
-
       return new StatusMonitorReply();
     }
 
@@ -69,7 +68,6 @@ namespace ApplicationStatusMonitor.Controllers
     public string GetConfiguration(string monitorName)
     {
       var config = _configRepo.GetMonitorConfiguration(monitorName);
-
       return config.Value;
     }
 
@@ -86,7 +84,5 @@ namespace ApplicationStatusMonitor.Controllers
     {
       return _configRepo.GetByType(type);
     }
-
-
   }
 }
