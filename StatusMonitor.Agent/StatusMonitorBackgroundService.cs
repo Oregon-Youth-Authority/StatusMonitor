@@ -23,10 +23,15 @@ namespace State.Or.Oya.Jjis.StatusMonitor
          {
             foreach (var monitor in _configuration.Monitors)
             {
-               var currentStatus = monitor.GetStatus();
-               if (currentStatus != monitor.PreviousStatus)
+               if (monitor.HasStatusChanged())
                {
-                  _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {currentStatus}");
+                  _logger.LogInformation($"{DateTime.Now} {monitor.Name} has changed from {monitor.PreviousStatus} to {monitor.Status}");
+                  continue;
+               }
+
+               if (monitor.LastStatusChange < DateTime.Now.AddMinutes(-60))
+               {
+                  _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {monitor.Status}");
                }
             }
 

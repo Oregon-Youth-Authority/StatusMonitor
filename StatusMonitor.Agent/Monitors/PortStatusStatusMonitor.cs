@@ -1,4 +1,6 @@
-﻿namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
+﻿using System;
+
+namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
 {
    public class PortStatusStatusMonitor : IStatusMonitor
    {
@@ -7,10 +9,7 @@
 
       private string _status;
       private string _previousStatus;
-
-      public virtual string Name { get; }
-
-      public virtual string PreviousStatus => _previousStatus;
+      private DateTime _lastStatusChange = DateTime.Today;
 
       public PortStatusStatusMonitor(string name, string host, int port)
       {
@@ -19,11 +18,21 @@
          _port = port;
       }
 
-      public virtual string GetStatus()
+      public virtual string Name { get; }
+
+      public virtual string PreviousStatus => _previousStatus;
+      public DateTime LastStatusChange => _lastStatusChange;
+
+      public virtual string Status => _status;
+
+      public virtual bool HasStatusChanged()
       {
          _previousStatus = _status;
          _status = GetCurrentStatus();
-         return _status;
+         if (_status == _previousStatus)
+            return false;
+         _lastStatusChange = DateTime.Now;
+         return true;
       }
 
       protected virtual string GetCurrentStatus()
