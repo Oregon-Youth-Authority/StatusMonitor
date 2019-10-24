@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace State.Or.Oya.Jjis.StatusMonitor
+namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 {
    public class StatusMonitorBackgroundService : BackgroundService
    {
@@ -23,7 +23,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor
          {
             foreach (var monitor in _configuration.Monitors)
             {
-               if (monitor.HasStatusChanged())
+               if (await monitor.HasStatusChanged())
                {
                   _logger.LogInformation($"{DateTime.Now} {monitor.Name} has changed from {monitor.PreviousStatus} to {monitor.Status}");
                   continue;

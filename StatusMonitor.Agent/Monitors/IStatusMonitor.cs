@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
 {
@@ -7,9 +8,12 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
       string Name { get; }
       string PreviousStatus { get; }
       string Status { get; }
-
+      
       DateTime LastStatusChange { get; }
 
-      bool HasStatusChanged();
-   } 
+      Task<bool> HasStatusChanged();
+
+      void CopyStatusFrom(IStatusMonitor copyFrom);
+
+   }
 }
