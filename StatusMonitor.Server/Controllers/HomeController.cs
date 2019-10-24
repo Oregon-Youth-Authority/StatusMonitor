@@ -13,10 +13,12 @@ namespace ApplicationStatusMonitor.Controllers
   {
     private const string forwardedHeader = "X-Forwarded-For";
     private IStatusRepository<StatusMonitorReply> _repo;
+    private IMonitorConfigurationRepository<MonitorConfiguration> _configRepo;
 
-    public HomeController(IStatusRepository<StatusMonitorReply> repo)
+    public HomeController(IStatusRepository<StatusMonitorReply> repo, IMonitorConfigurationRepository<MonitorConfiguration> configRepo)
     {
       _repo = repo;
+      _configRepo = configRepo;
     }
 
     // spit out headers for testing
