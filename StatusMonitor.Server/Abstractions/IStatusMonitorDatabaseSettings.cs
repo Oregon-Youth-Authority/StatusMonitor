@@ -4,6 +4,7 @@ namespace ApplicationStatusMonitor
    {
       string ConnectionString { get; set; }
       string StatusMonitorRepliesCollection { get; set; }
+      string MonitorConfigsCollection { get; set; }
       string DatabaseName { get; set; }
    }
 }
