@@ -12,11 +12,14 @@ namespace ApplicationStatusMonitor.Controllers
     public class HomeController : ControllerBase
     {
        private const string forwardedHeader = "X-Forwarded-For";
-       private IStatusRepository<StatusMonitorReply> _repo;
+       
+       private IStatusRepository<StatusMonitorReply> _repliesRepo;
+       private IMonitorConfigurationRepository<MonitorConfiguration> _configRepo;
 
-       public HomeController(IStatusRepository<StatusMonitorReply> repo)
+       public HomeController(IStatusRepository<StatusMonitorReply> repliesRepo, IMonitorConfigurationRepository<MonitorConfiguration> configRepo)
        {
-          _repo = repo;
+          _repliesRepo = repliesRepo;
+          _configRepo = configRepo;
        }
 
        // spit out headers for testing
@@ -41,7 +44,7 @@ namespace ApplicationStatusMonitor.Controllers
           var locationId = Request.Headers.Keys.Contains(forwardedHeader) ? Request.Headers[forwardedHeader].ToString() : $"No LocationId provided in {forwardedHeader} header";
           
           // get last status
-          var recentStatus = _repo.GetLatestStatusRecord(locationId, statusMonitorRequest.MonitorName);
+          var recentStatus = _repliesRepo.GetLatestStatusRecord(locationId, statusMonitorRequest.MonitorName);
           
           // if status changed from previous status or there are no status records
           if (recentStatus == null || recentStatus.Status != statusMonitorRequest.Status)
@@ -56,12 +59,22 @@ namespace ApplicationStatusMonitor.Controllers
                 StatusStartTime = DateTime.Now
              };
 
-             _repo.AddStatusRecord(reply);
+             _repliesRepo.AddStatusRecord(reply);
 
              return reply;
           }
 
           return new StatusMonitorReply();
        }
+
+       [HttpGet]
+       [Route("/getConfiguration")]
+       public string GetConfiguration(string monitorName)
+       {
+          var config = _configRepo.GetMonitorConfiguration(monitorName);
+
+          return config.Value;
+       }
+
     }
 }
