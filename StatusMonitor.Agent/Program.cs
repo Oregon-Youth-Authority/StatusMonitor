@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using State.Or.Oya.Jjis.StatusMonitor.Monitors;
+using State.Or.Oya.Jjis.StatusMonitor.BackgroundServices;
+using State.Or.Oya.Jjis.StatusMonitor.Util;
+using System;
+using System.Threading.Tasks;
 
 namespace State.Or.Oya.Jjis.StatusMonitor
 {
-   class Program
+   internal class Program
    {
-      static async Task Main(string[] args)
+      private static async Task Main(string[] args)
       {
          await new HostBuilder()
-            .ConfigureServices((context, services) =>  services.ConfigureServices())
+            .ConfigureServices((context, services) => services.ConfigureServices())
             .RunConsoleAsync();
-         
+
          Console.WriteLine("Application Exiting... ");
       }
    }
@@ -26,19 +26,16 @@ namespace State.Or.Oya.Jjis.StatusMonitor
       {
          services
             .AddHostedService<StatusMonitorBackgroundService>()
+            .AddHostedService<ConfigurationUpdaterBackgroundService>()
             .AddLogging(builder =>
             {
                builder.AddConsole();
                builder.SetMinimumLevel(LogLevel.Information);
             })
-            .AddSingleton<StatusMonitorConfiguration>(sp => new StatusMonitorConfiguration
-            {
-               Monitors = new List<IStatusMonitor>
-               {
-                  new PortStatusStatusMonitor("DB Connectivity", "", 0),
-                  new PortStatusStatusMonitor("Web Connectivity", "", 0)
-               }
-            });
+            .AddTransient<IStatusMonitorApi, FakeStatusMonitorApi>()
+            .AddSingleton<INetworkUtil, NetworkUtil>()
+            .AddSingleton(sp => StatusMonitorConfigurationFactory.Create(sp.GetService<IStatusMonitorApi>(), sp.GetService<INetworkUtil>()));
+            
 
          return services;
       }
