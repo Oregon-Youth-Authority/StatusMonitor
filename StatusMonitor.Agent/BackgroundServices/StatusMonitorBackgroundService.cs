@@ -3,20 +3,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using State.Or.Oya.Jjis.StatusMonitor.Configuration;
 using State.Or.Oya.StatusMonitor.Client.Generated;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 {
    public class StatusMonitorBackgroundService : BackgroundService
    {
-      private readonly StatusMonitorConfiguration _configuration;
+      private readonly StatusMonitorConfiguration _statusMonitorConfiguration;
       private readonly StatusMonitorClientFactory _statusMonitorClientFactory;
       private readonly ILogger<StatusMonitorBackgroundService> _logger;
+      private readonly int _statusCheckInterval;
+      private readonly int _statusUpdateInterval;
 
-      public StatusMonitorBackgroundService(StatusMonitorConfiguration configuration, StatusMonitorClientFactory statusMonitorClientFactory, ILogger<StatusMonitorBackgroundService> logger)
+      public StatusMonitorBackgroundService(ApplicationConfiguration applicationConfiguration, StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClientFactory statusMonitorClientFactory, ILogger<StatusMonitorBackgroundService> logger)
       {
-         _configuration = configuration;
+         _statusMonitorConfiguration = statusMonitorConfiguration;
          _statusMonitorClientFactory = statusMonitorClientFactory;
+         _statusCheckInterval = applicationConfiguration.StatusCheckInterval;
+         _statusUpdateInterval = applicationConfiguration.StatusUpdateInterval;
          _logger = logger;
       }
 
@@ -24,7 +29,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
       {
          while (!stoppingToken.IsCancellationRequested)
          {
-            foreach (var monitor in _configuration.Monitors)
+            foreach (var monitor in _statusMonitorConfiguration.Monitors)
             {
                if (await monitor.HasStatusChanged())
                {
@@ -39,13 +44,13 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
                   continue;
                }
 
-               if (monitor.LastStatusChange < DateTime.Now.AddMinutes(-60))
+               if (monitor.LastStatusChange < DateTime.Now.AddMilliseconds(_statusUpdateInterval * -1))
                {
                   _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {monitor.Status}");
                }
             }
 
-            await Task.Delay(3000, stoppingToken);
+            await Task.Delay(_statusCheckInterval, stoppingToken);
          }
       }
    }

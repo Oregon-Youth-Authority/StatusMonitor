@@ -7,6 +7,7 @@ using State.Or.Oya.StatusMonitor.Client.Generated;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using State.Or.Oya.Jjis.StatusMonitor.Configuration;
 
 namespace State.Or.Oya.Jjis.StatusMonitor
 {
@@ -31,16 +32,18 @@ namespace State.Or.Oya.Jjis.StatusMonitor
       internal static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
       {
          services
-            .AddHostedService<StatusMonitorBackgroundService>()
             .AddHostedService<ConfigurationUpdaterBackgroundService>()
+            .AddHostedService<StatusMonitorBackgroundService>()
             .AddLogging(builder =>
             {
                builder.AddConsole();
                builder.SetMinimumLevel(LogLevel.Information);
             })
+            .AddTransient<ApplicationConfiguration>()
+            .AddTransient(sp => config)
             .AddSingleton<INetworkUtil, NetworkUtil>()
             .AddSingleton<StatusMonitorConfiguration>()
-            .AddSingleton<StatusMonitorClientFactory>(sp => new StatusMonitorClientFactory(sp))
+            .AddSingleton(sp => new StatusMonitorClientFactory(sp))
             .AddHttpClient<StatusMonitorClient>(client => client.BaseAddress = new Uri(config["ApiUrl"]));
 
          return services;

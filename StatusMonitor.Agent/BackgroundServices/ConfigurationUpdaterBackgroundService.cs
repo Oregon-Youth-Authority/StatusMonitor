@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using State.Or.Oya.Jjis.StatusMonitor.Configuration;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 {
@@ -15,13 +16,15 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
       private readonly StatusMonitorConfiguration _statusMonitorConfiguration;
       private readonly StatusMonitorClientFactory _statusMonitorClientFactory;
       private readonly INetworkUtil _networkUtil;
+      private readonly int _configurationRefreshInterval;
       private readonly ILogger<ConfigurationUpdaterBackgroundService> _logger;
 
-      public ConfigurationUpdaterBackgroundService(StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClientFactory statusMonitorClientFactory, INetworkUtil networkUtil, ILogger<ConfigurationUpdaterBackgroundService> logger)
+      public ConfigurationUpdaterBackgroundService(ApplicationConfiguration applicationConfiguration, StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClientFactory statusMonitorClientFactory, INetworkUtil networkUtil, ILogger<ConfigurationUpdaterBackgroundService> logger)
       {
          _statusMonitorConfiguration = statusMonitorConfiguration;
          _statusMonitorClientFactory = statusMonitorClientFactory;
          _networkUtil = networkUtil;
+         _configurationRefreshInterval = applicationConfiguration.ConfigurationRefreshInterval;
          _logger = logger;
       }
 
@@ -58,11 +61,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
             {
                _logger.LogError($"Unable to refresh configuration. {ex.Message}");
             }
-#if DEBUG
-            await Task.Delay(10000, stoppingToken);
-#else
-            await Task.Delay(600000, stoppingToken);
-#endif
+            await Task.Delay(_configurationRefreshInterval, stoppingToken);
          }
       }
 

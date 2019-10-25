@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using State.Or.Oya.Jjis.StatusMonitor.Monitors;
 
-namespace State.Or.Oya.Jjis.StatusMonitor
+namespace State.Or.Oya.Jjis.StatusMonitor.Configuration
 {
    public class StatusMonitorConfiguration
    {
