@@ -7,18 +7,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using State.Or.Oya.Jjis.StatusMonitor.Monitors;
 using State.Or.Oya.Jjis.StatusMonitor.Util;
+using State.Or.Oya.StatusMonitor.Client.Generated;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 {
    public class ConfigurationUpdaterBackgroundService : BackgroundService
    {
       private readonly StatusMonitorConfiguration _statusMonitorConfiguration;
-      private readonly IStatusMonitorApi _statusMonitorApi;
+      private readonly StatusMonitorClient _statusMonitorApi;
       private readonly INetworkUtil _networkUtil;
       private readonly ILogger<ConfigurationUpdaterBackgroundService> _logger;
-      private bool _isStarting = true;
 
-      public ConfigurationUpdaterBackgroundService(StatusMonitorConfiguration statusMonitorConfiguration, IStatusMonitorApi statusMonitorApi, INetworkUtil networkUtil, ILogger<ConfigurationUpdaterBackgroundService> logger)
+      public ConfigurationUpdaterBackgroundService(StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClient statusMonitorApi, INetworkUtil networkUtil, ILogger<ConfigurationUpdaterBackgroundService> logger)
       {
          _statusMonitorConfiguration = statusMonitorConfiguration;
          _statusMonitorApi = statusMonitorApi;
@@ -32,11 +32,9 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
          {
             try
             {
-               if (!_isStarting)
-               {
-                  var monitorConfigs = _statusMonitorApi
-                     .GetMonitorConfigs()
-                     .Where(m => m.Enabled)
+                  var monitorConfigs = (await _statusMonitorApi
+                     .GetConfigurationsAsync(stoppingToken))
+                     .Where(m => m.Active)
                      .ToList();
 
                   foreach (var monitorConfiguration in monitorConfigs)
@@ -54,7 +52,6 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
                      .Where(m => monitorConfigs.All(config => config.MonitorName != m.Name))
                      .ToList()
                      .ForEach(m => _statusMonitorConfiguration.Monitors.Remove(m));
-               }
             }
             catch (Exception ex)
             {
@@ -65,8 +62,6 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 #else
             await Task.Delay(600000, stoppingToken);
 #endif
-
-            _isStarting = false;
          }
       }
 

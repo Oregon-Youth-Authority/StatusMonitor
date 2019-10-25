@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using State.Or.Oya.StatusMonitor.Client.Generated;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
 {
-   public abstract class StatusMonitor<TConfig> : IStatusMonitor
+   public abstract class StatusMonitorBase<TConfig> : IStatusMonitor
    {
       private static JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
       {
          PropertyNameCaseInsensitive = true
       };
 
-      protected StatusMonitor(MonitorConfiguration configuration)
+      protected StatusMonitorBase(MonitorConfiguration configuration)
       {
          Configuration = JsonSerializer.Deserialize<TConfig>(configuration.Value, _jsonSerializerOptions);
          Name = configuration.MonitorName;

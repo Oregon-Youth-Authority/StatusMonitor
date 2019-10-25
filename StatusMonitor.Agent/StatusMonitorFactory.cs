@@ -1,5 +1,6 @@
 ﻿using State.Or.Oya.Jjis.StatusMonitor.Monitors;
 using State.Or.Oya.Jjis.StatusMonitor.Util;
+using State.Or.Oya.StatusMonitor.Client.Generated;
 
 namespace State.Or.Oya.Jjis.StatusMonitor
 {
@@ -10,7 +11,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor
          switch (configuration.Type)
          {
             case "Port":
-               return new PortStatusMonitor(networkUtil, configuration);
+               return new PortStatusMonitorBase(networkUtil, configuration);
 
             default:
                return null;

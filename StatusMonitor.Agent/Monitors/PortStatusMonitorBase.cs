@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
 using State.Or.Oya.Jjis.StatusMonitor.Util;
+using State.Or.Oya.StatusMonitor.Client.Generated;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
 {
-   public class PortStatusMonitor : StatusMonitor<PortStatusMonitorConfig>
+   public class PortStatusMonitorBase : StatusMonitorBase<PortStatusMonitorConfig>
    {
       private readonly INetworkUtil _networkUtil;
       private readonly int _slowTime;
 
 
 
-      public PortStatusMonitor(INetworkUtil networkUtil, MonitorConfiguration configuration) : base(configuration)
+      public PortStatusMonitorBase(INetworkUtil networkUtil, MonitorConfiguration configuration) : base(configuration)
       {
          _networkUtil = networkUtil;
          _slowTime = Configuration.SlowTime ?? Convert.ToInt32(Configuration.Timeout * .4);

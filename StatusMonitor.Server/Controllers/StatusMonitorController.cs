@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationStatusMonitor.Controllers
 {
-  [Route("Home")]
+  [Route("StatusMonitor")]
   [ApiController]
-  public class HomeController : ControllerBase
+  public class StatusMonitorController : ControllerBase
   {
     private const string forwardedHeader = "X-Forwarded-For";
     private IStatusRepository<StatusMonitorReply> _repo;
     private IMonitorConfigurationRepository<MonitorConfiguration> _configRepo;
 
-    public HomeController(IStatusRepository<StatusMonitorReply> repo, IMonitorConfigurationRepository<MonitorConfiguration> configRepo)
+    public StatusMonitorController(IStatusRepository<StatusMonitorReply> repo, IMonitorConfigurationRepository<MonitorConfiguration> configRepo)
     {
       _repo = repo;
       _configRepo = configRepo;
