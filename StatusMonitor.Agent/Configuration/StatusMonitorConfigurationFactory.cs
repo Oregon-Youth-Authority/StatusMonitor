@@ -1,9 +1,10 @@
-﻿using State.Or.Oya.Jjis.StatusMonitor.Util;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using State.Or.Oya.Jjis.StatusMonitor.Monitors;
+using State.Or.Oya.Jjis.StatusMonitor.Util;
 using State.Or.Oya.StatusMonitor.Client.Generated;
 
-namespace State.Or.Oya.Jjis.StatusMonitor
+namespace State.Or.Oya.Jjis.StatusMonitor.Configuration
 {
    public static class StatusMonitorConfigurationFactory
    {
