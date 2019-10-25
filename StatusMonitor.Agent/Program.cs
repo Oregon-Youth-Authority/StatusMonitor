@@ -40,7 +40,8 @@ namespace State.Or.Oya.Jjis.StatusMonitor
             })
             .AddSingleton<INetworkUtil, NetworkUtil>()
             .AddSingleton<StatusMonitorConfiguration>()
-            .AddHttpClient<StatusMonitorClient>(client => client.BaseAddress = new Uri(config["ApiUrl"])); ;
+            .AddSingleton<StatusMonitorClientFactory>(sp => new StatusMonitorClientFactory(sp))
+            .AddHttpClient<StatusMonitorClient>(client => client.BaseAddress = new Uri(config["ApiUrl"]));
 
          return services;
       }
