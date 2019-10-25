@@ -15,5 +15,6 @@ namespace ApplicationStatusMonitor.Controllers
       public string MonitorName { get; set; }
       public string LocationId { get; set; }
       public string DisplayName { get; set; }
+      public DateTime LastStatusUpdateTime { get; set; }
    }
 }

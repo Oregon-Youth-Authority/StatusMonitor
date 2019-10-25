@@ -1,12 +1,13 @@
 
 using System.Collections.Generic;
+using System.Threading;
 using ApplicationStatusMonitor.Controllers;
 
 using MongoDB.Driver;
 
 namespace ApplicationStatusMonitor
 {
-  public class MonitorConfigurationMongoRepository<T> : IMonitorConfigurationRepository<T>
+  public class MonitorConfigurationMongoRepository<T> : IMonitorConfigurationRepository<T> where T : MonitorConfiguration
   {
     private IMongoCollection<T> _configs;
 
@@ -21,7 +22,7 @@ namespace ApplicationStatusMonitor
 
     public T GetMonitorConfiguration(string monitorName)
     {
-      var filter = Builders<T>.Filter.Eq("MonitorName", monitorName);
+      var filter = Builders<T>.Filter.Eq(e=>e.MonitorName, monitorName);
       var record = _configs.Find(filter).Limit(1).FirstOrDefault();
       return record;
     }
@@ -33,7 +34,7 @@ namespace ApplicationStatusMonitor
 
     public IEnumerable<T> GetByType(string type)
     {
-      return _configs.Find(Builders<T>.Filter.Eq("Type", type)).ToList();
+      return _configs.Find(Builders<T>.Filter.Eq(e=>e.Type, type)).ToList();
     }
 
     #endregion
