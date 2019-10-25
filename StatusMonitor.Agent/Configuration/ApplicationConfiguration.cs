@@ -16,9 +16,9 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Configuration
          StatusUpdateInterval = TryGetValueFromConfig(configuration, nameof(StatusUpdateInterval), StatusUpdateInterval);
       }
 
-      public int ConfigurationRefreshInterval { get; set; } = 600000;
-      public int StatusCheckInterval { get; set; } = 360000;
-      public int StatusUpdateInterval { get; set; } = 3600000;
+      public int ConfigurationRefreshInterval { get; set; } = 900000; // 15 minutes
+      public int StatusCheckInterval { get; set; } = 300000;  // 5 minutes
+      public int StatusUpdateInterval { get; set; } = 3600000; // 60 minutes
 
       private int TryGetValueFromConfig(IConfiguration config, string configName, int defaultValue)
       {
