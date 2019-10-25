@@ -12,12 +12,12 @@ namespace ApplicationStatusMonitor.Controllers
   public class StatusMonitorController : ControllerBase
   {
     private const string forwardedHeader = "X-Forwarded-For";
-    private IStatusRepository<StatusMonitorReply> _repo;
+    private IStatusRepository<StatusMonitorReply> _repliesRepo;
     private IMonitorConfigurationRepository<MonitorConfiguration> _configRepo;
 
-    public StatusMonitorController(IStatusRepository<StatusMonitorReply> repo, IMonitorConfigurationRepository<MonitorConfiguration> configRepo)
+    public StatusMonitorController(IStatusRepository<StatusMonitorReply> repliesRepo, IMonitorConfigurationRepository<MonitorConfiguration> configRepo)
     {
-      _repo = repo;
+      _repliesRepo = repliesRepo;
       _configRepo = configRepo;
     }
 
@@ -41,9 +41,10 @@ namespace ApplicationStatusMonitor.Controllers
     {
       // origin location of request, currently public IP
       var locationId = Request.Headers.Keys.Contains(forwardedHeader) ? Request.Headers[forwardedHeader].ToString() : $"No LocationId provided in {forwardedHeader} header";
+      var lastUpdateTime = DateTime.Now;
 
       // get last status
-      var recentStatus = _repo.GetLatestStatusRecord(locationId, statusMonitorRequest.MonitorName);
+      var recentStatus = _repliesRepo.GetLatestStatusRecord(locationId, statusMonitorRequest.MonitorName);
 
       // if status changed from previous status or there are no status records
       if (recentStatus == null || recentStatus.Status != statusMonitorRequest.Status)
@@ -55,14 +56,16 @@ namespace ApplicationStatusMonitor.Controllers
           Status = statusMonitorRequest.Status,
           MonitorName = statusMonitorRequest.MonitorName,
           DisplayName = statusMonitorRequest.DisplayName,
-          StatusStartTime = DateTime.Now
+          StatusStartTime = lastUpdateTime,
+          LastStatusUpdateTime = lastUpdateTime
         };
 
-        _repo.AddStatusRecord(reply);
+        _repliesRepo.AddStatusRecord(reply);
 
         return reply;
       }
-      return new StatusMonitorReply();
+
+      return _repliesRepo.Update(recentStatus.LocationId, recentStatus.MonitorName, DateTime.Now);
     }
 
     [HttpGet]
