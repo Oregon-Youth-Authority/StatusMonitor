@@ -5,6 +5,7 @@ using State.Or.Oya.Jjis.StatusMonitor.BackgroundServices;
 using State.Or.Oya.Jjis.StatusMonitor.Util;
 using State.Or.Oya.StatusMonitor.Client.Generated;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using State.Or.Oya.Jjis.StatusMonitor.Configuration;
@@ -13,14 +14,20 @@ namespace State.Or.Oya.Jjis.StatusMonitor
 {
    internal class Program
    {
-      static IConfiguration _config = new ConfigurationBuilder()
-         .AddJsonFile("appsettings.json", true, true)
-         .Build();
-
       private static async Task Main(string[] args)
       {
+         var configFileName = "appsettings.json";
+         var configFilePath = Path.Combine(Environment.CurrentDirectory, configFileName);
+         configFilePath = File.Exists(configFilePath)
+            ? configFilePath
+            : configFileName;
+
+         var config = new ConfigurationBuilder()
+            .AddJsonFile(configFilePath, false, true)
+            .Build();
+
          await new HostBuilder()
-            .ConfigureServices((context, services) => services.ConfigureServices(_config))
+            .ConfigureServices((context, services) => services.ConfigureServices(config))
             .RunConsoleAsync();
 
          Console.WriteLine("Application Exiting... ");

@@ -37,13 +37,15 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
                var client = _statusMonitorClientFactory.Create();
 
                var monitorConfigs = (await client
-                  .GetConfigurationsAsync(stoppingToken))
+                     .GetConfigurationsAsync(stoppingToken))
                   .Where(m => m.Active)
                   .ToList();
 
                foreach (var monitorConfiguration in monitorConfigs)
                {
-                  var existingMonitor = _statusMonitorConfiguration.Monitors.FirstOrDefault(m => m.Name == monitorConfiguration.MonitorName);
+                  var existingMonitor =
+                     _statusMonitorConfiguration.Monitors.FirstOrDefault(
+                        m => m.Name == monitorConfiguration.MonitorName);
                   if (existingMonitor != null)
                      UpdateMonitor(existingMonitor, monitorConfiguration);
                   else
@@ -51,7 +53,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
                      AddMonitor(monitorConfiguration);
                   }
                }
-               
+
                _statusMonitorConfiguration.Monitors
                   .Where(m => monitorConfigs.All(config => config.MonitorName != m.Name))
                   .ToList()
@@ -61,7 +63,10 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
             {
                _logger.LogError($"Unable to refresh configuration. {ex.Message}");
             }
-            await Task.Delay(_configurationRefreshInterval, stoppingToken);
+            finally
+            {
+               await Task.Delay(_configurationRefreshInterval, stoppingToken);
+            }
          }
       }
 

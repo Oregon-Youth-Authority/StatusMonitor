@@ -24,11 +24,14 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Configuration
       {
          try
          {
-            return config.GetValue<int>(configName);
+            var configValue = config.GetValue<int?>(configName);
+            var value = configValue ?? defaultValue;
+            _logger.LogInformation($"Configuration {configName} is {value}");
+            return value;
          }
          catch (Exception ex)
          {
-            _logger.LogWarning($"Unable to read {configName} from configuration. {ex.Message}");
+            _logger.LogWarning($"Unable to read {configName} from configuration. Defaulting to {defaultValue}. {ex.Message}");
             return defaultValue;
          }
       }
