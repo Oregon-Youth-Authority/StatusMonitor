@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace ApplicationStatusMonitor.Controllers
 {
   [Route("StatusMonitor")]
   [ApiController]
+  [Authorize]
   public class StatusMonitorController : ControllerBase
   {
     private const string forwardedHeader = "X-Forwarded-For";
