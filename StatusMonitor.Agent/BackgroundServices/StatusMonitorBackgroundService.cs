@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +16,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
       private readonly ILogger<StatusMonitorBackgroundService> _logger;
       private readonly int _statusCheckInterval;
       private readonly int _statusUpdateInterval;
+      private bool _monitorsLoaded = false;
 
       public StatusMonitorBackgroundService(ApplicationConfiguration applicationConfiguration, StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClientFactory statusMonitorClientFactory, ILogger<StatusMonitorBackgroundService> logger)
       {
@@ -27,6 +29,9 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 
       protected override async Task ExecuteAsync(CancellationToken stoppingToken)
       {
+         // Wait for ConfigurationUpdaterBackgroundService to get monitor configuration
+         await WaitForMonitorConfiguration(stoppingToken);
+
          while (!stoppingToken.IsCancellationRequested)
          {
             foreach (var monitor in _statusMonitorConfiguration.Monitors)
@@ -52,6 +57,19 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 
             await Task.Delay(_statusCheckInterval, stoppingToken);
          }
+      }
+
+      private async Task WaitForMonitorConfiguration(CancellationToken stoppingToken)
+      {
+         if (_monitorsLoaded)
+            return;
+         
+         while (!_statusMonitorConfiguration.Monitors.Any() && !stoppingToken.IsCancellationRequested)
+         {
+            await Task.Delay(2000, stoppingToken);
+         }
+
+         _monitorsLoaded = true;
       }
    }
 }
