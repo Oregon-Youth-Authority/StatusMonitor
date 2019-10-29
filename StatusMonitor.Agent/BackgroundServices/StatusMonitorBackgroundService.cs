@@ -37,7 +37,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
                   await client.UpdateStatusAsync(new StatusMonitorRequest
                   {
                      MonitorName = monitor.Name,
-                     Status = monitor.Status,
+                     Status = monitor.Status.ToString(),
                      DisplayName = Environment.MachineName
                   }, stoppingToken);
                   _logger.LogInformation($"{DateTime.Now} {monitor.Name} has changed from {monitor.PreviousStatus} to {monitor.Status}");

@@ -19,19 +19,29 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
       }
 
       public string Name { get; }
-      public virtual string PreviousStatus { get; protected set; }
+      public virtual MonitorStatus PreviousStatus { get; protected set; } = MonitorStatus.Offline;
       public DateTime LastStatusChange { get; protected set; } = DateTime.Today;
 
-      public abstract Task<bool> HasStatusChanged();
+      public virtual MonitorStatus Status { get; protected set; } = MonitorStatus.Offline;
 
-      public virtual string Status { get; protected set; } = "Offline";
-
+      public virtual async Task<bool> HasStatusChanged()
+      {
+         PreviousStatus = Status;
+         Status = await GetCurrentStatus();
+         if (Status == PreviousStatus)
+            return false;
+         LastStatusChange = DateTime.Now;
+         return true;
+      }
+      
       public void CopyStatusFrom(IStatusMonitor copyFrom)
       {
          LastStatusChange = copyFrom.LastStatusChange;
          PreviousStatus = copyFrom.PreviousStatus;
          Status = copyFrom.Status;
       }
+
+      protected abstract Task<MonitorStatus> GetCurrentStatus();
 
       protected TConfig Configuration { get; set; }
    }
