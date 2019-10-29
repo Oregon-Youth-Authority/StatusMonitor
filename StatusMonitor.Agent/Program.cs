@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,14 +33,17 @@ namespace State.Or.Oya.Jjis.StatusMonitor
 
       internal static IConfiguration GetConfiguration()
       {
-         var configFileName = "appsettings.json";
-         var configFilePath = Path.Combine(Environment.CurrentDirectory, configFileName);
-         configFilePath = File.Exists(configFilePath)
-            ? configFilePath
-            : configFileName;
+         var appSettingsFilename = "appsettings.json";
+         var apiKeySettingsFilename = "apiKey.json";
 
-         return new ConfigurationBuilder()
-            .AddJsonFile(configFilePath, false, true)
+         string ConfigFallback((string currentDir, string fallBack) fallbackTuple) => File.Exists(fallbackTuple.currentDir) ? fallbackTuple.currentDir : fallbackTuple.fallBack;
+
+         var appSettingsFile = ConfigFallback((Path.Combine(Environment.CurrentDirectory, appSettingsFilename), appSettingsFilename));
+         var apiKeyFile      = ConfigFallback((Path.Combine(Environment.CurrentDirectory, apiKeySettingsFilename), apiKeySettingsFilename));
+         
+         var config = new ConfigurationBuilder()
+            .AddJsonFile(appSettingsFile, false, true)
+            .AddJsonFile(apiKeyFile, optional:false)
             .Build();
       }
    }
@@ -50,6 +53,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor
       internal static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
       {
          services
+            .Configure<ApiKeySettings>(config.GetSection(nameof(ApiKeySettings)))
             .AddHostedService<ConfigurationUpdaterBackgroundService>()
             .AddHostedService<StatusMonitorBackgroundService>()
             .AddLogging(builder =>
@@ -64,7 +68,9 @@ namespace State.Or.Oya.Jjis.StatusMonitor
             .AddSingleton<INetworkUtil, NetworkUtil>()
             .AddSingleton<StatusMonitorConfiguration>()
             .AddSingleton(sp => new StatusMonitorClientFactory(sp))
-            .AddHttpClient<StatusMonitorClient>(client => client.BaseAddress = new Uri(config["ApiUrl"]));
+            .AddTransient<ApiKeyHandler>()
+            .AddHttpClient<StatusMonitorClient>(client => client.BaseAddress = new Uri(config["ApiUrl"]))
+            .AddHttpMessageHandler<ApiKeyHandler>();
 
          return services;
       }

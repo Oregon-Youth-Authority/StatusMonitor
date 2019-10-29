@@ -7,6 +7,7 @@
    </PropertyGroup>
 
    <ItemGroup>
+     <None Remove="apiKey.json" />
      <None Remove="appsettings.json" />
    </ItemGroup>
 
