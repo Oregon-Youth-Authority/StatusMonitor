@@ -54,14 +54,11 @@ namespace State.Or.Oya.Jjis.StatusMonitor
             .AddHostedService<StatusMonitorBackgroundService>()
             .AddLogging(builder =>
             {
-               builder.AddConsole();
-               builder.SetMinimumLevel(LogLevel.Information);
+               builder
+                  .AddEventLog(settings =>settings.Filter = (s, level) => level >= LogLevel.Warning)
+                  .AddConsole()
+                  .SetMinimumLevel(LogLevel.Information);
             })
-            //.AddLogging(builder =>
-            //{
-            //   builder.AddEventLog();
-            //   builder.SetMinimumLevel(LogLevel.Warning);
-            //})
             .AddTransient<ApplicationConfiguration>()
             .AddTransient(sp => config)
             .AddSingleton<INetworkUtil, NetworkUtil>()
