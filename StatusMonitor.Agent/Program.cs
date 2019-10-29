@@ -41,7 +41,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor
          var appSettingsFile = ConfigFallback((Path.Combine(Environment.CurrentDirectory, appSettingsFilename), appSettingsFilename));
          var apiKeyFile      = ConfigFallback((Path.Combine(Environment.CurrentDirectory, apiKeySettingsFilename), apiKeySettingsFilename));
          
-         var config = new ConfigurationBuilder()
+         return new ConfigurationBuilder()
             .AddJsonFile(appSettingsFile, false, true)
             .AddJsonFile(apiKeyFile, optional:false)
             .Build();
