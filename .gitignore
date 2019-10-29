@@ -354,3 +354,5 @@ MigrationBackup/
 
 #Dotnet warp
 **/dotnetwarp*
+
+apiKey.json
