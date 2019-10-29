@@ -12,8 +12,9 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
          switch (configuration.Type)
          {
             case "Port":
-               return new PortStatusMonitorBase(networkUtil, configuration);
-
+               return new PortStatusMonitor(networkUtil, configuration);
+            case "HTTP":
+               return new HttpStatusMonitor(configuration);
             default:
                return new EmptyStatusMonitor();
          }
@@ -23,8 +24,8 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
    public class EmptyStatusMonitor : IStatusMonitor
    {
       public string Name { get; } = "Empty";
-      public string PreviousStatus => Name;
-      public string Status => Name;
+      public MonitorStatus PreviousStatus => MonitorStatus.Offline;
+      public MonitorStatus Status => MonitorStatus.Offline;
       public DateTime LastStatusChange { get; } = DateTime.MinValue;
       public Task<bool> HasStatusChanged()
       {
