@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationStatusMonitor.Controllers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ApplicationStatusMonitor
@@ -44,6 +45,27 @@ namespace ApplicationStatusMonitor
          return _replies.FindOneAndUpdate(filter, setLastUpdate, new FindOneAndUpdateOptions<T> {Sort = sort});
       }
 
+      public IEnumerable<T> GetLatestStatusRecordForEachLocation()
+      {
+         // get a list of the latest status replies for monitor, location, and name
+         var pipeline = PipelineDefinition<T,T>.Create(
+            "{ $sort: { LastStatusUpdateTime: -1 } }",
+            "{ $addFields: { LocationAndMonitor: {$concat: [\"$MonitorName\",\"-\",\"$LocationId\",\"-\", \"$DisplayName\"]} } }",
+            "{ $group: { \"_id\": \"$LocationAndMonitor\", \"latest\": { $first: \"$$ROOT\" } } }",
+            "{ $replaceRoot: { newRoot: \"$latest\" } }",
+            "{ $project: {\"LocationAndMonitor\": 0} }"
+            );
+
+         var results = _replies.Aggregate(pipeline);
+         return results.ToList();
+      }
+
       #endregion
+   }
+
+   public class MonitorReplySummary
+   {
+      public string _id {get;set;}
+      public string latest {get;set;}
    }
 }
