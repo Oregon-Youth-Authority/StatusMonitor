@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ApplicationStatusMonitor.Controllers.StatusMonitorReply>
+
+@{
+   Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+   <title>Status Monitor</title>
+   <style>
+      ul.statusList {
+         background: beige;
+         display: table;
+         margin: 5px;
+         list-style-type: none;
+         padding-left: 0;
+      }
+
+      ul.statusList li {
+         display: table-row;
+         padding: 1px;
+         /*     border: 1px solid red; */
+      }
+
+
+      ul.statusList li > * {
+         display: table-cell;
+         padding: 5px;
+         /*     border: 1px solid green; */
+
+      }
+
+      ul.statusList li.up { background-color: lightgreen;}
+      ul.statusList li.down { background-color: pink;}
+   </style>
+</head>
+<body>
+<ul class="statusList">
+   <li>
+      <span>MonitorName</span>
+      <span>DisplayName</span>
+      <span>LocationId</span>
+      <span>LastStatusUpdateTime</span>
+      <span>StatusStartTime</span>
+      <span>Status</span>
+   </li>
+   @foreach (var s in Model)
+   {
+      <li class="@s.Status?.ToLower()">
+         <span>@s.MonitorName</span>
+         <span>@s.DisplayName</span>
+         <span>@s.LocationId</span>
+         <span>@s.LastStatusUpdateTime</span>
+         <span>@s.StatusStartTime</span>
+         <span>@s.Status</span>
+      </li>
+   }
+</ul>
+</body>
+</html>

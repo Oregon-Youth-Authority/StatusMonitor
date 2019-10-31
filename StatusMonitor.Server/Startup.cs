@@ -55,6 +55,7 @@ namespace ApplicationStatusMonitor
          });
 
          services.AddControllers();
+         services.AddMvcCore().AddRazorViewEngine();
          services.Configure<StatusMonitorDatabaseSettings>( Configuration.GetSection(nameof(StatusMonitorDatabaseSettings)));
          services.AddSingleton<IStatusMonitorDatabaseSettings>( sp => sp.GetRequiredService<IOptions<StatusMonitorDatabaseSettings>>().Value);
          
@@ -112,7 +113,7 @@ namespace ApplicationStatusMonitor
 
          app.UseAuthentication();
          app.UseAuthorization();
-         
+
          app.UseEndpoints(endpoints =>
          {
             endpoints.MapDefaultControllerRoute();
