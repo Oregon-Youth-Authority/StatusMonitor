@@ -46,7 +46,7 @@ namespace ApplicationStatusMonitor.Controllers
       var lastUpdateTime = DateTime.Now;
 
       // get last status
-      var recentStatus = _repliesRepo.GetLatestStatusRecord(locationId, statusMonitorRequest.MonitorName);
+      var recentStatus = _repliesRepo.GetLatestStatusRecord(locationId, statusMonitorRequest.MonitorName, statusMonitorRequest.DisplayName);
 
       // if status changed from previous status or there are no status records
       if (recentStatus == null || recentStatus.Status != statusMonitorRequest.Status)
