@@ -9,7 +9,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
       MonitorStatus PreviousStatus { get; }
       MonitorStatus Status { get; }
       
-      DateTime LastStatusChange { get; }
+      DateTime LastStatusChange { get; set; }
 
       Task<bool> HasStatusChanged();
 
