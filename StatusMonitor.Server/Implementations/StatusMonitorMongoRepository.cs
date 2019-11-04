@@ -28,9 +28,11 @@ namespace ApplicationStatusMonitor
          return record;
       }
 
-      public T GetLatestStatusRecord(string location, string monitorName)
+      public T GetLatestStatusRecord(string location, string monitorName, string displayName)
       {
-         var filter = Builders<T>.Filter.Eq(e => e.LocationId, location) & Builders<T>.Filter.Eq(e=> e.MonitorName, monitorName);
+         var filter = Builders<T>.Filter.Eq(e => e.LocationId, location) &
+                      Builders<T>.Filter.Eq(e => e.MonitorName, monitorName) &
+                      Builders<T>.Filter.Eq(e => e.DisplayName, displayName);
          var sort = Builders<T>.Sort.Descending(e => e.StatusStartTime);
          var record = _replies.Find(filter).Sort(sort).Limit(1).FirstOrDefault();
          return record;
