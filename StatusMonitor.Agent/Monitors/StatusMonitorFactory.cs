@@ -26,7 +26,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
       public string Name { get; } = "Empty";
       public MonitorStatus PreviousStatus => MonitorStatus.Offline;
       public MonitorStatus Status => MonitorStatus.Offline;
-      public DateTime LastStatusChange { get; } = DateTime.MinValue;
+      public DateTime LastStatusChange { get; set; } = DateTime.MinValue;
       public Task<bool> HasStatusChanged()
       {
          return Task.FromResult(false);

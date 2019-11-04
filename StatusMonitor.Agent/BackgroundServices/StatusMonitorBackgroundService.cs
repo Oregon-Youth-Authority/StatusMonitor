@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using State.Or.Oya.Jjis.StatusMonitor.Configuration;
+using State.Or.Oya.Jjis.StatusMonitor.Monitors;
 using State.Or.Oya.StatusMonitor.Client.Generated;
 
 namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
@@ -38,25 +39,30 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
             {
                if (await monitor.HasStatusChanged())
                {
-                  var client = _statusMonitorClientFactory.Create();
-                  await client.UpdateStatusAsync(new StatusMonitorRequest
-                  {
-                     MonitorName = monitor.Name,
-                     Status = monitor.Status.ToString(),
-                     DisplayName = Environment.MachineName
-                  }, stoppingToken);
+                  await PersistMonitorStatus(monitor, stoppingToken);
                   _logger.LogInformation($"{DateTime.Now} {monitor.Name} has changed from {monitor.PreviousStatus} to {monitor.Status}");
                   continue;
                }
 
-               if (monitor.LastStatusChange < DateTime.Now.AddMilliseconds(_statusUpdateInterval * -1))
-               {
-                  _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {monitor.Status}");
-               }
+               if (monitor.LastStatusChange >= DateTime.Now.AddMilliseconds(_statusUpdateInterval * -1)) continue;
+               await PersistMonitorStatus(monitor, stoppingToken);
+               monitor.LastStatusChange = DateTime.Now;
+               _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {monitor.Status}");
             }
 
             await Task.Delay(_statusCheckInterval, stoppingToken);
          }
+      }
+
+      private async Task PersistMonitorStatus(IStatusMonitor monitor, CancellationToken stoppingToken)
+      {
+         var client = _statusMonitorClientFactory.Create();
+         await client.UpdateStatusAsync(new StatusMonitorRequest
+         {
+            MonitorName = monitor.Name,
+            Status = monitor.Status.ToString(),
+            DisplayName = Environment.MachineName
+         }, stoppingToken);
       }
 
       private async Task WaitForMonitorConfiguration(CancellationToken stoppingToken)
@@ -66,7 +72,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
          
          while (!_statusMonitorConfiguration.Monitors.Any() && !stoppingToken.IsCancellationRequested)
          {
-            await Task.Delay(2000, stoppingToken);
+            await Task.Delay(10000, stoppingToken);
          }
 
          _monitorsLoaded = true;

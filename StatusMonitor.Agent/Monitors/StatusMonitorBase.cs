@@ -20,7 +20,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.Monitors
 
       public string Name { get; }
       public virtual MonitorStatus PreviousStatus { get; protected set; } = MonitorStatus.Offline;
-      public DateTime LastStatusChange { get; protected set; } = DateTime.Today;
+      public DateTime LastStatusChange { get; set; } = DateTime.Today;
 
       public virtual MonitorStatus Status { get; protected set; } = MonitorStatus.Offline;
 
