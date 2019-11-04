@@ -1,11 +1,9 @@
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-$publishDir = "$scriptPath\publish\JJISStatusAgent"
+$publishDir = "$scriptPath\publish\"
 New-Item -ItemType Directory -Path $publishDir -ErrorAction Ignore
 
-Copy-Item -Force $scriptPath\install-windows-service.ps1 $publishDir\
-Copy-Item -Force $scriptPath\remove-windows-service.ps1 $publishDir\
-
-$publishFilePath = "$publishDir\JJISStatusAgent.exe"
+# If the exe name changes, then Installer.cs Install() must be updated
+$publishFilePath = "$publishDir\JJISStatusMonitorAgent.exe"
 
 #For the following to work you must have dotnet-warp. If not, run the following in powershell: dotnet tool install --global dotnet-warp
 dotnet-warp.exe $scriptPath -o $publishFilePath
