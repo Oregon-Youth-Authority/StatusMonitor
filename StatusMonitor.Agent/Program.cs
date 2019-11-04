@@ -20,8 +20,8 @@ namespace State.Or.Oya.Jjis.StatusMonitor
       private static async Task Main(string[] args)
       {
          var isService = !(Debugger.IsAttached || args.All(arg => arg != "--service"));
-         var config = GetConfiguration();
 
+         var config = GetConfiguration();
          var hostBuilder = new HostBuilder().ConfigureServices((context, services) => services.ConfigureServices(config));
          if (isService)
             await hostBuilder.RunAsServiceAsync();
@@ -39,11 +39,11 @@ namespace State.Or.Oya.Jjis.StatusMonitor
          string ConfigFallback((string currentDir, string fallBack) fallbackTuple) => File.Exists(fallbackTuple.currentDir) ? fallbackTuple.currentDir : fallbackTuple.fallBack;
 
          var appSettingsFile = ConfigFallback((Path.Combine(Environment.CurrentDirectory, appSettingsFilename), appSettingsFilename));
-         var apiKeyFile      = ConfigFallback((Path.Combine(Environment.CurrentDirectory, apiKeySettingsFilename), apiKeySettingsFilename));
-         
+         var apiKeyFile = ConfigFallback((Path.Combine(Environment.CurrentDirectory, apiKeySettingsFilename), apiKeySettingsFilename));
+
          return new ConfigurationBuilder()
             .AddJsonFile(appSettingsFile, false, true)
-            .AddJsonFile(apiKeyFile, optional:false)
+            .AddJsonFile(apiKeyFile, optional: false)
             .Build();
       }
    }
@@ -59,7 +59,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor
             .AddLogging(builder =>
             {
                builder
-                  .AddEventLog(settings =>settings.Filter = (s, level) => level >= LogLevel.Warning)
+                  .AddEventLog(settings => settings.Filter = (s, level) => level >= LogLevel.Warning)
                   .AddConsole()
                   .SetMinimumLevel(LogLevel.Information);
             })

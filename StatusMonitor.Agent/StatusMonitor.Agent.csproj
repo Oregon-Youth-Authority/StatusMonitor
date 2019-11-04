@@ -3,7 +3,7 @@
       <OutputType>Exe</OutputType>
       <TargetFramework>netcoreapp3.0</TargetFramework>
       <RootNamespace>State.Or.Oya.Jjis.StatusMonitor</RootNamespace>
-      <AssemblyName>JJISStatusMonitorAgent</AssemblyName>
+      <AssemblyName>JJISStatusMonitorAgentWorker</AssemblyName>
    </PropertyGroup>
 
    <ItemGroup>
@@ -12,6 +12,7 @@
    </ItemGroup>
 
    <ItemGroup>
+      <PackageReference Include="Core.System.Configuration.Install" Version="1.0.1" />
       <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.5.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0" />
