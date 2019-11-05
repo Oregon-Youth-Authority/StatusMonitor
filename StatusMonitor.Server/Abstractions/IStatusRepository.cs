@@ -9,5 +9,7 @@ namespace ApplicationStatusMonitor.Controllers
       T GetLatestStatusRecord(string location, string monitorName, string displayName);
       T Update(string location, string monitorName, DateTime lastStatusUpdateTime);
       IEnumerable<T> GetLatestStatusRecordForEachLocation();
+      IEnumerable<T> GetCurrentlyDown();
+      
    }
 }

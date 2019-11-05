@@ -1,0 +1,36 @@
+﻿ul.statusList {
+   background: beige;
+   display: table;
+   margin: 5px;
+   list-style-type: none;
+   padding-left: 0;
+}
+
+ul.statusList li {
+   display: table-row;
+   padding: 1px;
+   /*     border: 1px solid red; */
+}
+
+ul.statusList li.heading {
+   font-weight: bold;
+   background-color: darkgray;
+}
+
+ul.statusList li > * {
+   display: table-cell;
+   padding: 5px;
+   /*     border: 1px solid green; */
+}
+
+ul.statusList li.up {
+   background-color: lightgreen;
+}
+
+ul.statusList li.down {
+   background-color: pink;
+}
+
+ul.statusList li.timeout {
+   background-color: orange;
+}
