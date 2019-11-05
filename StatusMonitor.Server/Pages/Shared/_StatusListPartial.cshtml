@@ -1,11 +1,12 @@
-﻿@model IEnumerable<ApplicationStatusMonitor.Controllers.StatusMonitorReply>
+﻿@using ApplicationStatusMonitor.Extensions
+@model IEnumerable<ApplicationStatusMonitor.Controllers.StatusMonitorReply>
 <ul class="statusList">
    <li class="heading">
       <span>Monitor Name</span>
       <span>Computer</span>
       <span>IP</span>
-      <span>Updated Time (UTC)</span>
-      <span>Start Time (UTC)</span>
+      <span>Updated Time (PST)</span>
+      <span>Start Time (PST)</span>
       <span>Status</span>
    </li>
    @foreach (var s in Model)
@@ -14,8 +15,8 @@
          <span>@s.MonitorName</span>
          <span>@s.DisplayName</span>
          <span>@s.LocationId</span>
-         <span>@s.LastStatusUpdateTime.ToUniversalTime()</span>
-         <span>@s.StatusStartTime.ToUniversalTime()</span>
+         <span>@s.LastStatusUpdateTime.ToPacificStandardTime()</span>
+         <span>@s.StatusStartTime.ToPacificStandardTime()</span>
          <span>@s.Status</span>
       </li>
    }
