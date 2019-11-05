@@ -1,0 +1,9 @@
+﻿@page
+@model ApplicationStatusMonitor.Pages.UnhealthyModel
+@{
+   ViewData["Title"] = "Unhealthy Monitors";
+
+}
+
+<h3>All Monitors with issues</h3>
+@await Html.PartialAsync("_StatusListPartial", Model.StatusReplies)

@@ -55,6 +55,7 @@ namespace ApplicationStatusMonitor
             "{ $addFields: { LocationAndMonitor: {$concat: [\"$MonitorName\",\"-\",\"$LocationId\",\"-\", \"$DisplayName\"]} } }",
             "{ $group: { \"_id\": \"$LocationAndMonitor\", \"latest\": { $first: \"$$ROOT\" } } }",
             "{ $replaceRoot: { newRoot: \"$latest\" } }",
+            "{ $sort: { LocationId: 1, MonitorName: 1, DisplayName: 1 } }",
             "{ $project: {\"LocationAndMonitor\": 0} }"
             );
 
@@ -62,12 +63,23 @@ namespace ApplicationStatusMonitor
          return results.ToList();
       }
 
-      #endregion
-   }
+      public IEnumerable<T> GetCurrentlyDown()
+      {
+         // get a list of the latest status replies for monitor, location, and name
+         var pipeline = PipelineDefinition<T, T>.Create(
+            "{ $sort: { LastStatusUpdateTime: -1 } }",
+            "{ $addFields: { LocationAndMonitor: {$concat: [\"$MonitorName\",\"-\",\"$LocationId\",\"-\", \"$DisplayName\"]} } }",
+            "{ $group: { \"_id\": \"$LocationAndMonitor\", \"latest\": { $first: \"$$ROOT\" } } }",
+            "{ $replaceRoot: { newRoot: \"$latest\" } }",
+            "{ $sort: { LocationId: 1, MonitorName: 1, DisplayName: 1 } }",
+            "{ $project: {\"LocationAndMonitor\": 0} }",
+            "{ $match : { Status: {$ne: \"Up\"} } }"
+         );
 
-   public class MonitorReplySummary
-   {
-      public string _id {get;set;}
-      public string latest {get;set;}
+         var results = _replies.Aggregate(pipeline);
+         return results.ToList();
+      }
+
+      #endregion
    }
 }
