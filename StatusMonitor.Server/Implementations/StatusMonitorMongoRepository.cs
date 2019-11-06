@@ -40,9 +40,10 @@ namespace ApplicationStatusMonitor
 
       public T Update(string location, string monitorName, string displayName, DateTime lastStatusUpdateTime)
       {
-         var filter = Builders<T>.Filter.Eq(e => e.LocationId, location) & 
+         var filter = Builders<T>.Filter.Eq(e => e.LocationId, location) &
                       Builders<T>.Filter.Eq(e => e.MonitorName, monitorName) &
-                      Builders<T>.Filter.Eq(e => e.DisplayName, displayName); 
+                      Builders<T>.Filter.Eq(e => e.DisplayName, displayName);
+
          var sort = Builders<T>.Sort.Descending(e => e.StatusStartTime);
 
          var setLastUpdate = Builders<T>.Update.Set(e => e.LastStatusUpdateTime, lastStatusUpdateTime);
