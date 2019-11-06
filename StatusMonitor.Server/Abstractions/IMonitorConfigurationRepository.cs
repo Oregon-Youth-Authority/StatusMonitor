@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ApplicationStatusMonitor.Controllers
+namespace ApplicationStatusMonitor.Abstractions
 {
   public interface IMonitorConfigurationRepository<T>
   {

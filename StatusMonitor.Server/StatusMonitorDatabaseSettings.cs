@@ -1,3 +1,5 @@
+using ApplicationStatusMonitor.Abstractions;
+
 namespace ApplicationStatusMonitor
 {
    public class StatusMonitorDatabaseSettings : IStatusMonitorDatabaseSettings

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.Controllers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace ApplicationStatusMonitor
+namespace ApplicationStatusMonitor.Implementations
 {
    public class StatusMonitorMongoRepository<T> : IStatusRepository<T> where T : StatusMonitorReply
    {
@@ -82,6 +80,22 @@ namespace ApplicationStatusMonitor
          var results = _replies.Aggregate(pipeline);
          return results.ToList();
       }
+
+      public async Task<IEnumerable<T>> GetStatusMonitorRepliesOlderThan(DateTime dateTime)
+      {
+         var filter = Builders<T>.Filter.Lt(e => e.LastStatusUpdateTime, dateTime);
+         return (await _replies.FindAsync(filter)).ToList();
+      }
+
+      public async Task DeleteStatusRecords(IEnumerable<T> statusRecordsToDelete)
+      {
+         foreach (var statusMonitorReply in statusRecordsToDelete)
+         {
+            var filter = Builders<T>.Filter.Eq(e => e.Id, statusMonitorReply.Id);
+            await _replies.FindOneAndDeleteAsync(filter);
+         }
+      }
+      
 
       #endregion
    }

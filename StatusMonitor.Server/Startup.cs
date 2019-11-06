@@ -13,6 +13,9 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationStatusMonitor.Abstractions;
+using ApplicationStatusMonitor.BackgroundServices;
+using ApplicationStatusMonitor.Implementations;
 
 namespace ApplicationStatusMonitor
 {
@@ -45,12 +48,13 @@ namespace ApplicationStatusMonitor
 
          services.AddControllers();
          services.AddRazorPages();
-         //services.AddMvcCore().AddRazorViewEngine();
          services.Configure<StatusMonitorDatabaseSettings>(Configuration.GetSection(nameof(StatusMonitorDatabaseSettings)));
          services.AddSingleton<IStatusMonitorDatabaseSettings>(sp => sp.GetRequiredService<IOptions<StatusMonitorDatabaseSettings>>().Value);
 
          services.AddTransient<IStatusRepository<StatusMonitorReply>, StatusMonitorMongoRepository<StatusMonitorReply>>();
          services.AddTransient<IMonitorConfigurationRepository<MonitorConfiguration>, MonitorConfigurationMongoRepository<MonitorConfiguration>>();
+
+         services.AddHostedService<DataCleanupBackgroundService>();
 
          services.AddAuthentication(options =>
                 {

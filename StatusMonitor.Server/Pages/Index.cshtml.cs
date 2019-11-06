@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.Controllers;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;

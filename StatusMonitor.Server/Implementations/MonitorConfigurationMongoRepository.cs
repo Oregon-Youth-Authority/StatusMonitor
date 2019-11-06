@@ -1,11 +1,9 @@
-
 using System.Collections.Generic;
-using System.Threading;
+using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.Controllers;
-
 using MongoDB.Driver;
 
-namespace ApplicationStatusMonitor
+namespace ApplicationStatusMonitor.Implementations
 {
   public class MonitorConfigurationMongoRepository<T> : IMonitorConfigurationRepository<T> where T : MonitorConfiguration
   {

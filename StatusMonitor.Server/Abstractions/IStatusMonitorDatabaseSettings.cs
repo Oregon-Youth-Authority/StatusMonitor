@@ -1,4 +1,4 @@
-namespace ApplicationStatusMonitor
+namespace ApplicationStatusMonitor.Abstractions
 {
    public interface IStatusMonitorDatabaseSettings
    {

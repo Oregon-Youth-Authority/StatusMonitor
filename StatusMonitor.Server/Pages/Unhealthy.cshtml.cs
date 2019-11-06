@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using ApplicationStatusMonitor.Abstractions;
 
 namespace ApplicationStatusMonitor.Pages
 {
