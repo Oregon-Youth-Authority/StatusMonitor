@@ -7,7 +7,7 @@ namespace ApplicationStatusMonitor.Controllers
    {
       T AddStatusRecord(T record);
       T GetLatestStatusRecord(string location, string monitorName, string displayName);
-      T Update(string location, string monitorName, DateTime lastStatusUpdateTime);
+      T Update(string location, string monitorName, string displayName, DateTime lastStatusUpdateTime);
       IEnumerable<T> GetLatestStatusRecordForEachLocation();
       IEnumerable<T> GetCurrentlyDown();
       
