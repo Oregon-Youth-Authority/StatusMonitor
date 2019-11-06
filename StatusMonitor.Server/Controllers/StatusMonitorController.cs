@@ -65,7 +65,7 @@ namespace ApplicationStatusMonitor.Controllers
             return reply;
          }
 
-         return _repliesRepo.Update(recentStatus.LocationId, recentStatus.MonitorName, DateTime.Now);
+         return _repliesRepo.Update(recentStatus.LocationId, recentStatus.MonitorName,recentStatus.DisplayName, DateTime.Now);
       }
 
       [HttpGet]
