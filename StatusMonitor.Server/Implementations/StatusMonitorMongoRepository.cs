@@ -87,19 +87,20 @@ namespace ApplicationStatusMonitor.Implementations
          if (displayName != null)
             filter &= Builders<T>.Filter.Eq(e => e.DisplayName, displayName);
 
-         var sort = Builders<T>.Sort.Descending(x => x.LastStatusUpdateTime);
-         var findOptions = new FindOptions<T>
-         {
-            Sort = sort
-         };
-
-         return (await _replies.FindAsync(filter, findOptions)).ToList();
+         return (await _replies.FindAsync(filter, SortByLastUpdateDescending())).ToList();
       }
 
       public async Task<IEnumerable<T>> GetStatusMonitorRepliesOlderThan(DateTime dateTime)
       {
          var filter = Builders<T>.Filter.Lt(e => e.LastStatusUpdateTime, dateTime);
          return (await _replies.FindAsync(filter)).ToList();
+      }
+
+      public async Task<IEnumerable<T>> GetRecentlyUnhealthy(DateTime dateTime)
+      {
+         var filter = Builders<T>.Filter.Gt(e => e.LastStatusUpdateTime, dateTime) &
+                     Builders<T>.Filter.Ne(e => e.Status, "Up");
+         return (await _replies.FindAsync(filter, SortByLastUpdateDescending())).ToList();
       }
 
       public async Task DeleteStatusRecords(IEnumerable<T> statusRecordsToDelete)
@@ -111,7 +112,14 @@ namespace ApplicationStatusMonitor.Implementations
          }
       }
       
-
       #endregion
+
+      private FindOptions<T> SortByLastUpdateDescending()
+      {
+         return new FindOptions<T>
+         {
+            Sort = Builders<T>.Sort.Descending(x => x.LastStatusUpdateTime)
+         };
+      }
    }
 }
