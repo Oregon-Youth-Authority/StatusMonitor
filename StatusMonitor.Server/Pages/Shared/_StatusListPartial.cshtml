@@ -1,23 +1,30 @@
 ﻿@using ApplicationStatusMonitor.Extensions
 @model IEnumerable<ApplicationStatusMonitor.Controllers.StatusMonitorReply>
-<ul class="statusList">
-   <li class="heading">
-      <span>Monitor Name</span>
-      <span>Computer</span>
-      <span>IP</span>
-      <span>Updated Time (PST)</span>
-      <span>Start Time (PST)</span>
-      <span>Status</span>
-   </li>
-   @foreach (var s in Model)
-   {
-      <li class="@s.Status?.ToLower()">
-         <span>@s.MonitorName</span>
-         <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
-         <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
-         <span>@s.LastStatusUpdateTime.ToPacificStandardTime()</span>
-         <span>@s.StatusStartTime.ToPacificStandardTime()</span>
-         <span>@s.Status</span>
+@if (Model.Any())
+{
+   <ul class="statusList">
+      <li class="heading">
+         <span>Monitor Name</span>
+         <span>Computer</span>
+         <span>Source IP</span>
+         <span>Updated Time (PST)</span>
+         <span>Start Time (PST)</span>
+         <span>Status</span>
       </li>
-   }
-</ul>
+      @foreach (var s in Model)
+      {
+         <li class="@s.Status?.ToLower()">
+            <span>@s.MonitorName</span>
+            <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
+            <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
+            <span>@s.LastStatusUpdateTime.ToPacificStandardTime()</span>
+            <span>@s.StatusStartTime.ToPacificStandardTime()</span>
+            <span>@s.Status</span>
+         </li>
+      }
+   </ul>
+}
+else
+{
+   <p>No monitors to display</p>
+}
