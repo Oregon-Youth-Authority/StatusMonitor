@@ -12,6 +12,7 @@ namespace ApplicationStatusMonitor.Abstractions
       IEnumerable<T> GetLatestStatusRecordForEachLocation();
       IEnumerable<T> GetCurrentlyDown();
 
+      Task<IEnumerable<T>> GetStatusRepliesForLocation(string locationId, string displayName);
       Task<IEnumerable<T>> GetStatusMonitorRepliesOlderThan(DateTime dateTime);
       Task DeleteStatusRecords(IEnumerable<T> statusRecordsToDelete);
 

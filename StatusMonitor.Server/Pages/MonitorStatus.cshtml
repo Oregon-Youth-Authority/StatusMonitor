@@ -1,0 +1,7 @@
+﻿@page "{locationId}/{name?}"
+@model ApplicationStatusMonitor.Pages.MonitorStatusModel
+@{
+   ViewData["Title"] = "Monitor Status History";
+}
+<h3>Monitor Status History for @Model.FormattedName()</h3>
+@await Html.PartialAsync("_StatusListPartial", Model.StatusReplies)

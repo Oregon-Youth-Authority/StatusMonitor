@@ -81,6 +81,21 @@ namespace ApplicationStatusMonitor.Implementations
          return results.ToList();
       }
 
+      public async Task<IEnumerable<T>> GetStatusRepliesForLocation(string locationId, string displayName)
+      {
+         var filter = Builders<T>.Filter.Eq(e => e.LocationId, locationId);
+         if (displayName != null)
+            filter &= Builders<T>.Filter.Eq(e => e.DisplayName, displayName);
+
+         var sort = Builders<T>.Sort.Descending(x => x.LastStatusUpdateTime);
+         var findOptions = new FindOptions<T>
+         {
+            Sort = sort
+         };
+
+         return (await _replies.FindAsync(filter, findOptions)).ToList();
+      }
+
       public async Task<IEnumerable<T>> GetStatusMonitorRepliesOlderThan(DateTime dateTime)
       {
          var filter = Builders<T>.Filter.Lt(e => e.LastStatusUpdateTime, dateTime);
