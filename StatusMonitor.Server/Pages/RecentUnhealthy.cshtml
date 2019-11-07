@@ -1,0 +1,10 @@
+﻿@page
+@model RecentUnhealthyModel
+@{
+   ViewData["Title"] = "Recently Unhealthy Monitors";
+
+}
+
+<h3>Recently Unhealthy Monitors</h3>
+@await Html.PartialAsync("_StatusListPartial", Model.StatusReplies)
+
