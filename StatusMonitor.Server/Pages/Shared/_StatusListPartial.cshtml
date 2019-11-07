@@ -13,8 +13,8 @@
    {
       <li class="@s.Status?.ToLower()">
          <span>@s.MonitorName</span>
-         <span>@s.DisplayName</span>
-         <span>@s.LocationId</span>
+         <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
+         <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
          <span>@s.LastStatusUpdateTime.ToPacificStandardTime()</span>
          <span>@s.StatusStartTime.ToPacificStandardTime()</span>
          <span>@s.Status</span>
