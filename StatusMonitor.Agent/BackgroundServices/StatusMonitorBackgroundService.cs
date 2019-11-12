@@ -35,19 +35,27 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 
          while (!stoppingToken.IsCancellationRequested)
          {
-            foreach (var monitor in _statusMonitorConfiguration.Monitors)
+            try
             {
-               if (await monitor.HasStatusChanged())
+               foreach (var monitor in _statusMonitorConfiguration.Monitors)
                {
-                  await PersistMonitorStatus(monitor, stoppingToken);
-                  _logger.LogInformation($"{DateTime.Now} {monitor.Name} has changed from {monitor.PreviousStatus} to {monitor.Status}");
-                  continue;
-               }
+                  if (await monitor.HasStatusChanged())
+                  {
+                     await PersistMonitorStatus(monitor, stoppingToken);
+                     _logger.LogInformation(
+                        $"{DateTime.Now} {monitor.Name} has changed from {monitor.PreviousStatus} to {monitor.Status}");
+                     continue;
+                  }
 
-               if (monitor.LastStatusChange >= DateTime.Now.AddMilliseconds(_statusUpdateInterval * -1)) continue;
-               await PersistMonitorStatus(monitor, stoppingToken);
-               monitor.LastStatusChange = DateTime.Now;
-               _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {monitor.Status}");
+                  if (monitor.LastStatusChange >= DateTime.Now.AddMilliseconds(_statusUpdateInterval * -1)) continue;
+                  await PersistMonitorStatus(monitor, stoppingToken);
+                  monitor.LastStatusChange = DateTime.Now;
+                  _logger.LogInformation($"{DateTime.Now} {monitor.Name} is {monitor.Status}");
+               }
+            }
+            catch (Exception ex)
+            {
+               _logger.LogError($"An unexpected error occurred. {ex.Message}");
             }
 
             await Task.Delay(_statusCheckInterval, stoppingToken);
