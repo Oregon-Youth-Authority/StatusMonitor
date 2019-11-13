@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
 {
    public class StatusMonitorBackgroundService : BackgroundService
    {
+      private readonly MonitorSettings _monitorSettings;
       private readonly StatusMonitorConfiguration _statusMonitorConfiguration;
       private readonly StatusMonitorClientFactory _statusMonitorClientFactory;
       private readonly ILogger<StatusMonitorBackgroundService> _logger;
@@ -19,8 +21,9 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
       private readonly int _statusUpdateInterval;
       private bool _monitorsLoaded = false;
 
-      public StatusMonitorBackgroundService(ApplicationConfiguration applicationConfiguration, StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClientFactory statusMonitorClientFactory, ILogger<StatusMonitorBackgroundService> logger)
+      public StatusMonitorBackgroundService(ApplicationConfiguration applicationConfiguration, MonitorSettings monitorSettings, StatusMonitorConfiguration statusMonitorConfiguration, StatusMonitorClientFactory statusMonitorClientFactory, ILogger<StatusMonitorBackgroundService> logger)
       {
+         _monitorSettings = monitorSettings;
          _statusMonitorConfiguration = statusMonitorConfiguration;
          _statusMonitorClientFactory = statusMonitorClientFactory;
          _statusCheckInterval = applicationConfiguration.StatusCheckInterval;
@@ -62,6 +65,12 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
          }
       }
 
+      private bool IsNewConfig(string config)
+      {
+         return !string.IsNullOrEmpty(config) &&
+                !string.Equals(config, "Detect", StringComparison.CurrentCultureIgnoreCase);
+      }
+
       private async Task PersistMonitorStatus(IStatusMonitor monitor, CancellationToken stoppingToken)
       {
          var client = _statusMonitorClientFactory.Create();
@@ -69,8 +78,31 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
          {
             MonitorName = monitor.Name,
             Status = monitor.Status.ToString(),
-            DisplayName = Environment.MachineName
+            DisplayName = GetDisplayName(monitor.Name),
+            LocationId = GetLocationId(monitor.Name)
          }, stoppingToken);
+      }
+
+      private string GetDisplayName(string monitorName)
+      {
+         var configValue = _monitorSettings.MonitorConfigurations.FirstOrDefault(mc => mc.Name == monitorName && IsNewConfig(mc.Computer))?.Computer;
+         if (configValue != null)
+         {
+            _logger.LogInformation($"Overriding computer name to {configValue} from configuration.");
+         }
+
+         return configValue ?? Environment.MachineName;
+      }
+
+      private string GetLocationId(string monitorName)
+      {
+         var configValue = _monitorSettings.MonitorConfigurations.FirstOrDefault(mc => mc.Name == monitorName && IsNewConfig(mc.SourceIp))?.SourceIp;
+         if (configValue != null)
+         {
+            _logger.LogInformation($"Overriding source IP to {configValue} from configuration.");
+         }
+
+         return configValue;
       }
 
       private async Task WaitForMonitorConfiguration(CancellationToken stoppingToken)

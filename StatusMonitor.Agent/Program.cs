@@ -35,16 +35,41 @@ namespace State.Or.Oya.Jjis.StatusMonitor
       {
          var appSettingsFilename = "appsettings.json";
          var apiKeySettingsFilename = "apiKey.json";
+         var monitorSettingsFilename = "monitorSettings.json";
 
          string ConfigFallback((string currentDir, string fallBack) fallbackTuple) => File.Exists(fallbackTuple.currentDir) ? fallbackTuple.currentDir : fallbackTuple.fallBack;
 
-         var appSettingsFile = ConfigFallback((Path.Combine(Environment.CurrentDirectory, appSettingsFilename), appSettingsFilename));
-         var apiKeyFile = ConfigFallback((Path.Combine(Environment.CurrentDirectory, apiKeySettingsFilename), apiKeySettingsFilename));
+         var applicationDirectory = GetApplicationDirectory();
+         var appSettingsFile = ConfigFallback((Path.Combine(applicationDirectory, appSettingsFilename), appSettingsFilename));
+         var apiKeyFile = ConfigFallback((Path.Combine(applicationDirectory, apiKeySettingsFilename), apiKeySettingsFilename));
+         var monitorSettingsFile = ConfigFallback((Path.Combine(applicationDirectory, monitorSettingsFilename), monitorSettingsFilename));
 
          return new ConfigurationBuilder()
             .AddJsonFile(appSettingsFile, false, true)
             .AddJsonFile(apiKeyFile, optional: false)
+            .AddJsonFile(monitorSettingsFile, true, false)
             .Build();
+      }
+
+      internal static string GetApplicationDirectory()
+      {
+         var appDirectory = Environment.CurrentDirectory;
+         try
+         {
+            var processName = !Debugger.IsAttached
+               ? "JJISStatusMonitorAgent"
+               : "JJISStatusMonitorAgentWorker";
+            
+            var process = Process.GetProcessesByName(processName)?.FirstOrDefault();
+            
+            var processPath = process?.MainModule?.FileName;
+            return processPath != null
+               ? new FileInfo(processPath).DirectoryName
+               : appDirectory;
+         }
+         catch { }
+
+         return appDirectory;
       }
    }
 
@@ -65,6 +90,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor
             })
             .AddTransient<ApplicationConfiguration>()
             .AddTransient(sp => config)
+            .AddSingleton<MonitorSettings>()
             .AddSingleton<INetworkUtil, NetworkUtil>()
             .AddSingleton<StatusMonitorConfiguration>()
             .AddSingleton(sp => new StatusMonitorClientFactory(sp))

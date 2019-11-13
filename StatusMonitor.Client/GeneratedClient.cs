@@ -491,6 +491,10 @@ namespace State.Or.Oya.StatusMonitor.Client.Generated
         [Newtonsoft.Json.JsonProperty("displayName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DisplayName { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("lastStatusUpdateTime", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset LastStatusUpdateTime { get; set; }
+    
     
     }
     
@@ -505,6 +509,9 @@ namespace State.Or.Oya.StatusMonitor.Client.Generated
     
         [Newtonsoft.Json.JsonProperty("monitorName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string MonitorName { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("locationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LocationId { get; set; }
     
     
     }

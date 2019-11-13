@@ -1,0 +1,14 @@
+{
+   "MonitorConfigurations": [
+      {
+         "Name": "JJIS",
+         "SourceIp": "Detect",
+         "Computer": "Detect"
+      },
+      {
+         "Name": "JJIS Web",
+         "SourceIp": "Detect",
+         "Computer": "Detect"
+      }
+   ]
+}

@@ -41,7 +41,7 @@ namespace ApplicationStatusMonitor.Controllers
       public StatusMonitorReply UpdateStatus([FromBody]StatusMonitorRequest statusMonitorRequest)
       {
          // origin location of request, currently public IP
-         var locationId = Request.Headers.Keys.Contains(forwardedHeader) ? Request.Headers[forwardedHeader].ToString() : $"No LocationId provided in {forwardedHeader} header";
+         var locationId = statusMonitorRequest.LocationId ?? GetLocationIdFromRequestHeader();
          var lastUpdateTime = DateTime.Now;
 
          // get last status
@@ -89,6 +89,13 @@ namespace ApplicationStatusMonitor.Controllers
       public IEnumerable<MonitorConfiguration> GetAllConfigurationsByType(string type)
       {
          return _configRepo.GetByType(type);
+      }
+
+      private string GetLocationIdFromRequestHeader()
+      {
+         return Request.Headers.Keys.Contains(forwardedHeader)
+            ? Request.Headers[forwardedHeader].ToString()
+            : $"No LocationId provided in {forwardedHeader} header";
       }
    }
 }
