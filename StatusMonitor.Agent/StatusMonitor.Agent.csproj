@@ -9,6 +9,7 @@
    <ItemGroup>
      <None Remove="apiKey.json" />
      <None Remove="appsettings.json" />
+     <None Remove="monitorSettings.json" />
    </ItemGroup>
 
    <ItemGroup>
@@ -24,6 +25,9 @@
    </ItemGroup>
 
    <ItemGroup>
+     <Content Include="monitorSettings.json">
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </Content>
      <Content Include="appsettings.json">
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </Content>

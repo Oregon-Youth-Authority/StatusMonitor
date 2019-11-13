@@ -11,6 +11,7 @@ namespace ApplicationStatusMonitor.BackgroundServices
 {
    public class OfflineMonitorsBackgroundService : BackgroundService
    {
+      private const string Offline = "Offline";
       private readonly IStatusRepository<StatusMonitorReply> _statusRepository;
       private readonly ILogger<OfflineMonitorsBackgroundService> _logger;
 
@@ -28,14 +29,14 @@ namespace ApplicationStatusMonitor.BackgroundServices
             {
                var datedStatusRecords = _statusRepository
                   .GetLatestStatusRecordForEachLocation()
-                  .Where(x => x.LastStatusUpdateTime < DateTime.Now.AddHours(-2))
+                  .Where(x => x.LastStatusUpdateTime < DateTime.Now.AddHours(-2) && x.Status != Offline)
                   .ToList();
 
                foreach (var datedStatusRecord in datedStatusRecords)
                {
                   _statusRepository.AddStatusRecord(new StatusMonitorReply
                   {
-                     Status = "Offline",
+                     Status = Offline,
                      MonitorName = datedStatusRecord.MonitorName,
                      DisplayName = datedStatusRecord.DisplayName,
                      LocationId = datedStatusRecord.LocationId,
