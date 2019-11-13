@@ -55,6 +55,7 @@ namespace ApplicationStatusMonitor
          services.AddTransient<IMonitorConfigurationRepository<MonitorConfiguration>, MonitorConfigurationMongoRepository<MonitorConfiguration>>();
 
          services.AddHostedService<DataCleanupBackgroundService>();
+         services.AddHostedService<OfflineMonitorsBackgroundService>();
 
          services.AddAuthentication(options =>
                 {

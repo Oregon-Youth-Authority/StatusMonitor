@@ -44,6 +44,7 @@ namespace StatusMonitor.Agent.Installer
 
       public override void Install(IDictionary stateSaver)
       {
+         RemoveService();
          var installDir = Context.Parameters["targetdir"].TrimEnd(new[] { '\\' });
          var binaryPath = $"\"{Path.Combine(installDir, "JJISStatusMonitorAgent.exe")}\" --service";
          var scManagerPtr = NativeMethods.OpenSCManager((string)null, (string)null, FullControlAccess);
@@ -105,9 +106,8 @@ namespace StatusMonitor.Agent.Installer
          try
          {
             servicePtr = NativeMethods.OpenService(scManagerPtr, ServiceName, 65536);
-            if (servicePtr == IntPtr.Zero)
-               throw new Win32Exception();
-            NativeMethods.DeleteService(servicePtr);
+            if (servicePtr != IntPtr.Zero)
+               NativeMethods.DeleteService(servicePtr);
          }
          finally
          {
