@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{2307C078
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "StatusMonitor.Agent.Setup", "Setup\StatusMonitor.Agent.Setup\StatusMonitor.Agent.Setup.vdproj", "{D96F1F97-489F-4A9F-A811-B2267A80B58A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusMonitor.ApiKey.Providers", "StatusMonitor.ApiKey.Providers\StatusMonitor.ApiKey.Providers.csproj", "{5E158D7E-2156-4A7B-B916-BEB2A4C96227}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{D96F1F97-489F-4A9F-A811-B2267A80B58A}.Debug|Any CPU.Build.0 = Debug
 		{D96F1F97-489F-4A9F-A811-B2267A80B58A}.Release|Any CPU.ActiveCfg = Release
 		{D96F1F97-489F-4A9F-A811-B2267A80B58A}.Release|Any CPU.Build.0 = Release
+		{5E158D7E-2156-4A7B-B916-BEB2A4C96227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E158D7E-2156-4A7B-B916-BEB2A4C96227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E158D7E-2156-4A7B-B916-BEB2A4C96227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E158D7E-2156-4A7B-B916-BEB2A4C96227}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

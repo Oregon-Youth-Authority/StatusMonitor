@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.ApiKey.Providers" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +24,10 @@
     <PackageReference Include="MongoDB.Driver" Version="2.9.2" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.1.3" />
     
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StatusMonitor.ApiKey.Providers\StatusMonitor.ApiKey.Providers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
