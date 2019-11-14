@@ -1,4 +1,5 @@
 ﻿@using ApplicationStatusMonitor.Extensions
+@using ApplicationStatusMonitor.Utility
 @model IEnumerable<ApplicationStatusMonitor.Controllers.StatusMonitorReply>
 @if (Model.Any())
 {
@@ -19,7 +20,7 @@
             <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
             <span>@s.LastStatusUpdateTime.ToPacificStandardTime()</span>
             <span>@s.StatusStartTime.ToPacificStandardTime()</span>
-            <span>@s.Status</span>
+            <span class="tooltip bottom" aria-label="@StatusDescriptionUtility.GetDescription(s.Status)">@s.Status</span>
          </li>
       }
    </ul>
