@@ -5,10 +5,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
-COPY ["StatusMonitor.Server.csproj", ""]
-RUN dotnet restore "./StatusMonitor.Server.csproj"
+COPY ["StatusMonitor.Server/StatusMonitor.Server.csproj", "StatusMonitor.Server/"]
+COPY ["StatusMonitor.ApiKey.Providers/StatusMonitor.ApiKey.Providers.csproj", "StatusMonitor.ApiKey.Providers/"]
+RUN dotnet restore "StatusMonitor.Server/StatusMonitor.Server.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src/StatusMonitor.Server"
 RUN dotnet build "StatusMonitor.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish
