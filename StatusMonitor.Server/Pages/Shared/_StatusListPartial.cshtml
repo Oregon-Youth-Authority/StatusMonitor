@@ -8,9 +8,9 @@
          <span>Monitor Name</span>
          <span>Computer</span>
          <span>Source IP</span>
-         <span>Updated Time (PST)</span>
-         <span>Start Time (PST)</span>
          <span>Status</span>
+         <span>Start Time (PST)</span>
+         <span>Confirmed Time (PST)</span>
       </li>
       @foreach (var s in Model)
       {
@@ -18,9 +18,9 @@
             <span>@s.MonitorName</span>
             <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
             <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
-            <span>@s.LastStatusUpdateTime.ToPacificStandardTime()</span>
-            <span>@s.StatusStartTime.ToPacificStandardTime()</span>
             <span class="tooltip bottom" aria-label="@StatusDescriptionUtility.GetDescription(s.Status)">@s.Status</span>
+            <span>@s.StatusStartTime.ToPacificStandardTime().ToString("M/d/yyy H:mm")</span>
+            <span>@s.LastStatusUpdateTime.ToPacificStandardTime().ToString("M/d/yyy H:mm")</span>
          </li>
       }
    </ul>
