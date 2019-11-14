@@ -29,20 +29,25 @@ namespace ApplicationStatusMonitor.BackgroundServices
             {
                var datedStatusRecords = _statusRepository
                   .GetLatestStatusRecordForEachLocation()
-                  .Where(x => x.LastStatusUpdateTime < DateTime.Now.AddHours(-2) && x.Status != Offline)
+                  .Where(x => x.LastStatusUpdateTime < DateTime.Now.AddHours(-2))
                   .ToList();
 
                foreach (var datedStatusRecord in datedStatusRecords)
                {
-                  _statusRepository.AddStatusRecord(new StatusMonitorReply
+                  if (datedStatusRecord.Status != Offline)
                   {
-                     Status = Offline,
-                     MonitorName = datedStatusRecord.MonitorName,
-                     DisplayName = datedStatusRecord.DisplayName,
-                     LocationId = datedStatusRecord.LocationId,
-                     LastStatusUpdateTime = DateTime.Now,
-                     StatusStartTime = DateTime.Now
-                  });
+                     _statusRepository.AddStatusRecord(new StatusMonitorReply
+                     {
+                        Status = Offline,
+                        MonitorName = datedStatusRecord.MonitorName,
+                        DisplayName = datedStatusRecord.DisplayName,
+                        LocationId = datedStatusRecord.LocationId,
+                        LastStatusUpdateTime = DateTime.Now,
+                        StatusStartTime = DateTime.Now
+                     });
+                  }
+
+                  _statusRepository.Update(datedStatusRecord.LocationId, datedStatusRecord.MonitorName, datedStatusRecord.DisplayName, DateTime.Now);
                }
 
             }

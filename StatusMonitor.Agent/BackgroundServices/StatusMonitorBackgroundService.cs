@@ -88,7 +88,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
          var configValue = _monitorSettings.MonitorConfigurations.FirstOrDefault(mc => mc.Name == monitorName && IsNewConfig(mc.Computer))?.Computer;
          if (configValue != null)
          {
-            _logger.LogInformation($"Overriding computer name to {configValue} from configuration.");
+            _logger.LogInformation($"Configuration file (monitorSettings.json) overrides computer name for {monitorName} to {configValue}");
          }
 
          return configValue ?? Environment.MachineName;
@@ -99,7 +99,7 @@ namespace State.Or.Oya.Jjis.StatusMonitor.BackgroundServices
          var configValue = _monitorSettings.MonitorConfigurations.FirstOrDefault(mc => mc.Name == monitorName && IsNewConfig(mc.SourceIp))?.SourceIp;
          if (configValue != null)
          {
-            _logger.LogInformation($"Overriding source IP to {configValue} from configuration.");
+            _logger.LogInformation($"Configuration file (monitorSettings.json) overrides source IP for {monitorName} to {configValue}.");
          }
 
          return configValue;
