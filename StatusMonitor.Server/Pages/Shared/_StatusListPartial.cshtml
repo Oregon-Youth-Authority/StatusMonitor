@@ -1,26 +1,41 @@
 ﻿@using ApplicationStatusMonitor.Extensions
 @using ApplicationStatusMonitor.Utility
-@model IEnumerable<ApplicationStatusMonitor.Controllers.StatusMonitorReply>
-@if (Model.Any())
+@model StatusListPartialModel
+@if (Model.StatusMonitorReplies.Any())
 {
    <ul class="statusList">
       <li class="heading">
          <span>Monitor Name</span>
          <span>Computer</span>
          <span>Source IP</span>
+         <span>Started (PST)</span>
+         @if (Model.ShowConfirmed)
+         {
+            <span>Confirmed</span>
+         }
+         @if (Model.ShowDuration)
+         {
+            <span>Duration</span>
+         }
          <span>Status</span>
-         <span>Start Time (PST)</span>
-         <span>Confirmed Time (PST)</span>
       </li>
-      @foreach (var s in Model)
+      @foreach (var s in Model.StatusMonitorReplies)
       {
          <li class="@s.Status?.ToLower()">
             <span>@s.MonitorName</span>
             <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
             <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
+            <span>@s.StatusStartTime.ToPacificStandardTimeString()</span>
+            @if (Model.ShowConfirmed)
+            {
+               <span>@DurationUtility.GetDuration(s.LastStatusUpdateTime, DateTime.Now) ago</span>
+            }
+            @if (Model.ShowDuration)
+            {
+               <span>@DurationUtility.GetDuration(s.StatusStartTime, s.LastStatusUpdateTime)</span>
+            }
+
             <span class="tooltip bottom" aria-label="@StatusDescriptionUtility.GetDescription(s.Status)">@s.Status</span>
-            <span>@s.StatusStartTime.ToPacificStandardTime().ToString("M/d/yyy H:mm")</span>
-            <span>@s.LastStatusUpdateTime.ToPacificStandardTime().ToString("M/d/yyy H:mm")</span>
          </li>
       }
    </ul>

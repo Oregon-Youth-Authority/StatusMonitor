@@ -8,5 +8,10 @@ namespace ApplicationStatusMonitor.Extensions
       {
          return TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.FindSystemTimeZoneById("America/Los_Angeles"));
       }
+
+      public static string ToPacificStandardTimeString(this DateTime dateTime)
+      {
+         return dateTime.ToPacificStandardTime().ToString("M/d/yyyy H:mm");
+      }
    }
 }

@@ -1,7 +1,11 @@
 ﻿@page
+@using ApplicationStatusMonitor.Pages.Shared
 @model IndexModel
 @{
    ViewData["Title"] = "Current Status List";
 }
 <h3>All Monitors - Current Status</h3>
-@await Html.PartialAsync("_StatusListPartial", Model.StatusReplies)
+@await Html.PartialAsync("_StatusListPartial", new StatusListPartialModel
+{
+   StatusMonitorReplies = Model.StatusReplies
+})
