@@ -1,7 +1,4 @@
 using ApplicationStatusMonitor.Controllers;
-using AspNet.Security.ApiKey.Providers;
-using AspNet.Security.ApiKey.Providers.Events;
-using AspNet.Security.ApiKey.Providers.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +13,7 @@ using System.Threading.Tasks;
 using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.BackgroundServices;
 using ApplicationStatusMonitor.Implementations;
+using StatusMonitor.ApiKey.Providers;
 
 namespace ApplicationStatusMonitor
 {
