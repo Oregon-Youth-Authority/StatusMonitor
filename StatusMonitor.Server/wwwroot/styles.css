@@ -23,6 +23,10 @@ ul.statusList li > * {
    /*     border: 1px solid green; */
 }
 
+ul.statusList li span:nth-child(n+4):nth-child(-n+6) {
+   display: none;
+}
+
 ul.statusList li.up {
    background-color: lightgreen;
 }
@@ -37,4 +41,10 @@ ul.statusList li.timeout {
 
 ul.statusList a:link, ul.statusList a:visited {
    color: #4b4b4b;
+}
+
+@media screen and (min-width: 1024px) {
+   ul.statusList li span:nth-child(n+4):nth-child(-n+6) {
+      display: table-cell;
+   }
 }

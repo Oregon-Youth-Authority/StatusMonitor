@@ -1,0 +1,11 @@
+﻿@page "{monitorName}"
+@using ApplicationStatusMonitor.Pages.Shared
+@model ByMonitorModel
+@{
+   ViewData["Title"] = "Monitor Status History";
+}
+<h3>Current Monitor Status for @Model.MonitorName</h3>
+@await Html.PartialAsync("_StatusListPartial", new StatusListPartialModel
+{
+   StatusMonitorReplies = Model.StatusReplies
+})
