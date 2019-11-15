@@ -9,5 +9,12 @@ namespace ApplicationStatusMonitor.Pages.Shared
        public IEnumerable<StatusMonitorReply> StatusMonitorReplies { get; set; }
        public bool ShowConfirmed { get; set; } = true;
        public bool ShowDuration { get; set; } = true;
+       public string ConfirmedCssClass => GetCssClassFromBool(ShowConfirmed);
+       public string DurationCssClass => GetCssClassFromBool(ShowDuration);
+
+       private string GetCssClassFromBool(bool isVisible)
+       {
+          return isVisible ? string.Empty : "hidden";
+       }
     }
 }
