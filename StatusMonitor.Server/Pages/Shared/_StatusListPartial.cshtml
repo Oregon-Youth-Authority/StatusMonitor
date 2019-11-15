@@ -9,14 +9,8 @@
          <span>Computer</span>
          <span>Source IP</span>
          <span>Started (PST)</span>
-         @if (Model.ShowConfirmed)
-         {
-            <span>Confirmed</span>
-         }
-         @if (Model.ShowDuration)
-         {
-            <span>Duration</span>
-         }
+         <span class="@Model.ConfirmedCssClass">Confirmed</span>
+         <span class="@Model.DurationCssClass">Duration</span>
          <span>Status</span>
       </li>
       @foreach (var s in Model.StatusMonitorReplies)
@@ -26,14 +20,8 @@
             <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
             <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
             <span>@s.StatusStartTime.ToPacificStandardTimeString()</span>
-            @if (Model.ShowConfirmed)
-            {
-               <span>@DurationUtility.GetDuration(s.LastStatusUpdateTime, DateTime.Now) ago</span>
-            }
-            @if (Model.ShowDuration)
-            {
-               <span>@DurationUtility.GetDuration(s.StatusStartTime, s.LastStatusUpdateTime)</span>
-            }
+            <span class="@Model.ConfirmedCssClass">@DurationUtility.GetDuration(s.LastStatusUpdateTime, DateTime.Now) ago</span>
+            <span class="@Model.DurationCssClass">@DurationUtility.GetDuration(s.StatusStartTime, s.LastStatusUpdateTime)</span>
 
             <span class="tooltip bottom" aria-label="@StatusDescriptionUtility.GetDescription(s.Status)">@s.Status</span>
          </li>
