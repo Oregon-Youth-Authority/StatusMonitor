@@ -23,7 +23,7 @@ namespace ApplicationStatusMonitor.Pages
 
       public async Task OnGet()
       {
-         StatusReplies = await _statusReplies.GetRecentlyUnhealthy(DateTime.Now.AddDays(-14));
+         StatusReplies = await _statusReplies.GetRecentlyUnhealthy(DateTime.Now.AddDays(-3));
       }
    }
 }
