@@ -87,7 +87,7 @@ namespace ApplicationStatusMonitor.Implementations
          if (displayName != null)
             filter &= Builders<T>.Filter.Eq(e => e.DisplayName, displayName);
 
-         return (await _replies.FindAsync(filter, SortByLastUpdateDescending())).ToList();
+         return (await _replies.FindAsync(filter, SortByRecent())).ToList();
       }
 
       public async Task<IEnumerable<T>> GetStatusMonitorRepliesOlderThan(DateTime dateTime)
@@ -100,7 +100,7 @@ namespace ApplicationStatusMonitor.Implementations
       {
          var filter = Builders<T>.Filter.Gt(e => e.LastStatusUpdateTime, dateTime) &
                      Builders<T>.Filter.Ne(e => e.Status, "Up");
-         return (await _replies.FindAsync(filter, SortByLastUpdateDescending())).ToList();
+         return (await _replies.FindAsync(filter, SortByRecent())).ToList();
       }
 
       public async Task DeleteStatusRecords(IEnumerable<T> statusRecordsToDelete)
@@ -114,11 +114,13 @@ namespace ApplicationStatusMonitor.Implementations
       
       #endregion
 
-      private FindOptions<T> SortByLastUpdateDescending()
+      private FindOptions<T> SortByRecent()
       {
          return new FindOptions<T>
          {
-            Sort = Builders<T>.Sort.Descending(x => x.LastStatusUpdateTime)
+            Sort = Builders<T>.Sort
+               .Descending(x => x.StatusStartTime)
+               .Descending(x => x.LastStatusUpdateTime)
          };
       }
    }
