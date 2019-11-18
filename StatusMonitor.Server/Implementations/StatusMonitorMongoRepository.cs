@@ -100,7 +100,9 @@ namespace ApplicationStatusMonitor.Implementations
       {
          var filter = Builders<T>.Filter.Gt(e => e.LastStatusUpdateTime, dateTime) &
                      Builders<T>.Filter.Ne(e => e.Status, "Up");
-         return (await _replies.FindAsync(filter, SortByRecent())).ToList();
+
+         var findOptions = SortByRecent();
+         return (await _replies.FindAsync(filter, findOptions)).ToList();
       }
 
       public async Task DeleteStatusRecords(IEnumerable<T> statusRecordsToDelete)
@@ -116,11 +118,15 @@ namespace ApplicationStatusMonitor.Implementations
 
       private FindOptions<T> SortByRecent()
       {
+         var sortExpression =$"{{ {nameof(StatusMonitorReply.StatusStartTime)}: -1, {nameof(StatusMonitorReply.LastStatusUpdateTime)}: -1}}";
+         return CreateSortFindOptions(sortExpression);
+      }
+
+      private FindOptions<T> CreateSortFindOptions(string jsonSortDefinition)
+      {
          return new FindOptions<T>
          {
-            Sort = Builders<T>.Sort
-               .Descending(x => x.StatusStartTime)
-               .Descending(x => x.LastStatusUpdateTime)
+            Sort = new JsonSortDefinition<T>(jsonSortDefinition)
          };
       }
    }
