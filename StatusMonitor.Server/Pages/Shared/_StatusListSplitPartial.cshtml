@@ -1,0 +1,29 @@
+﻿@model StatusListSplitPartialModel
+
+<div class="card fluid">
+   @if (Model.OfflineReplies.Any())
+   {
+      <h4>Online Monitors</h4>
+   }
+
+   @await Html.PartialAsync("_StatusListPartial", new StatusListPartialModel
+   {
+      ShowConfirmed = Model.ShowConfirmed,
+      ShowDuration = Model.ShowConfirmed,
+      StatusMonitorReplies = Model.OnlineReplies
+   })
+</div>
+
+@if (Model.OfflineReplies.Any())
+{
+<div class="card fluid">
+   <h4>Offline  Monitors</h4>
+   @await Html.PartialAsync("_StatusListPartial", new StatusListPartialModel
+   {
+      ShowConfirmed = Model.ShowConfirmed,
+      ShowDuration = Model.ShowConfirmed,
+      StatusMonitorReplies = Model.OfflineReplies
+   })
+<small> Offline monitors are those that aren't currently reporting their status.  This implies that the agent isn't running or is unable to reach this site.</small>
+</div>
+}
