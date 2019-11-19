@@ -7,7 +7,7 @@
 }
 
 <h3>Recently Unhealthy Monitors</h3>
-@await Html.PartialAsync("_StatusListPartial", new StatusListPartialModel
+@await Html.PartialAsync("_StatusListSplitPartial", new StatusListSplitPartialModel
 {
    ShowConfirmed = false,
    StatusMonitorReplies = Model.StatusReplies

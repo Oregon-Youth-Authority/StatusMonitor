@@ -5,7 +5,7 @@
    ViewData["Title"] = "Current Status List";
 }
 <h3>All Monitors - Current Status</h3>
-@await Html.PartialAsync("_StatusListPartial", new StatusListPartialModel
+@await Html.PartialAsync("_StatusListSplitPartial", new StatusListSplitPartialModel
 {
    StatusMonitorReplies = Model.StatusReplies
 })
