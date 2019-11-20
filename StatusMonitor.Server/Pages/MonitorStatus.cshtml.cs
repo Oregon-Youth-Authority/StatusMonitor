@@ -2,12 +2,14 @@
 using System.Threading.Tasks;
 using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationStatusMonitor.Pages
 {
+   [Authorize]
    public class MonitorStatusModel : PageModel
    {
       private readonly IStatusRepository<StatusMonitorReply> _statusReplies;

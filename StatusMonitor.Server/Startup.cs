@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.BackgroundServices;
 using ApplicationStatusMonitor.Implementations;
+using AspNetCore.Identity.Mongo;
+using AspNetCore.Identity.Mongo.Model;
+using Microsoft.AspNetCore.Identity;
 using StatusMonitor.ApiKey.Providers;
 
 namespace ApplicationStatusMonitor
@@ -55,12 +58,41 @@ namespace ApplicationStatusMonitor
          services.AddHostedService<DataCleanupBackgroundService>();
          services.AddHostedService<OfflineMonitorsBackgroundService>();
 
-         services.AddAuthentication(options =>
+         services.AddIdentityMongoDbProvider<AppUser, AppRole>(identityOptions =>
+            {
+               identityOptions.SignIn.RequireConfirmedAccount = true;
+               identityOptions.Password.RequiredLength = 6;
+               identityOptions.Password.RequireLowercase = false;
+               identityOptions.Password.RequireUppercase = false;
+               identityOptions.Password.RequireNonAlphanumeric = false;
+               identityOptions.Password.RequireDigit = false;
+            }, mongoIdentityOptions =>
+            {
+               mongoIdentityOptions.UseDefaultIdentity = true;
+               mongoIdentityOptions.ConnectionString = Configuration["StatusMonitorDatabaseSettings:ConnectionString"];
+            })
+            .AddDefaultUI();
+         
+         services
+            .AddAuthentication(options =>
                 {
-                   options.DefaultAuthenticateScheme = ApiKeyDefaults.AuthenticationScheme;
-                   options.DefaultChallengeScheme = ApiKeyDefaults.AuthenticationScheme;
+                   options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                   options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                   options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
-                .AddApiKey(options =>
+            .AddGoogle(options =>
+               {
+                  IConfigurationSection googleConfig = Configuration.GetSection("Authentication:Google");
+                  options.ClientId = googleConfig["ClientId"];
+                  options.ClientSecret = googleConfig["ClientSecret"];
+               })
+            .AddLinkedIn(options =>
+            {
+               var linkedinConfig = Configuration.GetSection("Authentication:LinkedIn");
+               options.ClientId = linkedinConfig["ClientId"];
+               options.ClientSecret = linkedinConfig["ClientSecret"];
+            })
+            .AddApiKey(options =>
                 {
                    options.Header = "X-API-KEY";
                    options.HeaderKey = String.Empty;
@@ -115,5 +147,13 @@ namespace ApplicationStatusMonitor
 
          app.UseStaticFiles();
       }
+   }
+
+   public class AppRole : MongoRole
+   {
+   }
+
+   public class AppUser : MongoUser
+   {
    }
 }

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using ApplicationStatusMonitor.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationStatusMonitor.Pages
 {
+   [Authorize]
    public class UnhealthyModel : PageModel
    {
       private readonly ILogger<UnhealthyModel> _logger;

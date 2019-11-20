@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ApplicationStatusMonitor.Abstractions;
+using StatusMonitor.ApiKey.Providers;
 
 namespace ApplicationStatusMonitor.Controllers
 {
    [Route("StatusMonitor")]
+   [Authorize(AuthenticationSchemes = ApiKeyDefaults.AuthenticationScheme)]
    [ApiController]
-   [Authorize]
+   
    public class StatusMonitorController : ControllerBase
    {
       private const string forwardedHeader = "X-Forwarded-For";
@@ -36,6 +38,7 @@ namespace ApplicationStatusMonitor.Controllers
          }
       }
 
+      
       [HttpPost]
       [Route("/updateStatus")]
       public StatusMonitorReply UpdateStatus([FromBody]StatusMonitorRequest statusMonitorRequest)

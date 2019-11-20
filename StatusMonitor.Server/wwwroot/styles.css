@@ -70,3 +70,7 @@ ul.statusList a:link, ul.statusList a:visited {
 ul.statusList li span.hidden {
    display: none;
 }
+
+main > div:first-child > div.col-md-4 {
+   display: none;
+}
