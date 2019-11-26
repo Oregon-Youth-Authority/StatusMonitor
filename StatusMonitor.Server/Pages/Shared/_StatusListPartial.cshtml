@@ -17,8 +17,16 @@
       {
          <li class="@s.Status?.ToLower()">
             <span><a href="~/ByMonitor/@s.MonitorName">@s.MonitorName</a></span>
-            <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
-            <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
+            @if (User.IsInRole("Approved"))
+            {
+               <span><a href="~/MonitorStatus/@s.LocationId/@s.DisplayName">@s.DisplayName</a></span>
+               <span><a href="~/MonitorStatus/@s.LocationId">@s.LocationId</a></span>
+            }
+            else
+            {
+               <span>@s.DisplayName</span>
+               <span>@Model.GetMaskedLocationId(s.LocationId)</span>
+            }
             <span>@s.StatusStartTime.ToPacificStandardTimeString()</span>
             <span class="@Model.ConfirmedCssClass">@DurationUtility.GetDuration(s.LastStatusUpdateTime, DateTime.Now) ago</span>
             <span class="@Model.DurationCssClass">@DurationUtility.GetDuration(s.StatusStartTime, s.LastStatusUpdateTime)</span>
