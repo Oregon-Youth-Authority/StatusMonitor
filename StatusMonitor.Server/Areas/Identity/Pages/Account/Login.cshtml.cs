@@ -16,6 +16,7 @@ using StatusMonitor.ApiKey.Providers;
 namespace ApplicationStatusMonitor.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [RequireHttps]
     public class LoginModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
