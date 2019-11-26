@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 namespace ApplicationStatusMonitor.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [RequireHttps]
     public class RegisterModel : PageModel
     {
         public RegisterModel()
