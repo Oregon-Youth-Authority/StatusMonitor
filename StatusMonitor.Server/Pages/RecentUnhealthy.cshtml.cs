@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApplicationStatusMonitor.Abstractions;
 using ApplicationStatusMonitor.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationStatusMonitor.Pages
 {
+   [Authorize]
    public class RecentUnhealthyModel : PageModel
    {
       private readonly ILogger<RecentUnhealthyModel> _logger;
