@@ -93,11 +93,11 @@ namespace ApplicationStatusMonitor
                options.ClientId = linkedinConfig["ClientId"];
                options.ClientSecret = linkedinConfig["ClientSecret"];
             })
-            .AddMicrosoftAccount(microsoftOptions =>
-            {
-               microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
-               microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
-            })
+            //.AddMicrosoftAccount(microsoftOptions =>
+            //{
+            //   microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+            //   microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+            //})
             .AddApiKey(options =>
                 {
                    options.Header = "X-API-KEY";
