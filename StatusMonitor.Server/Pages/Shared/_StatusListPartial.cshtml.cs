@@ -12,9 +12,21 @@ namespace ApplicationStatusMonitor.Pages.Shared
        public string ConfirmedCssClass => GetCssClassFromBool(ShowConfirmed);
        public string DurationCssClass => GetCssClassFromBool(ShowDuration);
 
+       public string GetMaskedLocationId(string locationId)
+       {
+          if (locationId == null)
+             return null;
+
+          var sections = locationId.Split(new[] {'.'});
+          return sections.Length < 4 
+             ? "**.***.***.**" 
+             : $"**.{sections[1]}.{sections[2]}.**";
+       }
+
        private string GetCssClassFromBool(bool isVisible)
        {
           return isVisible ? string.Empty : "hidden";
        }
+
     }
 }

@@ -71,6 +71,7 @@ namespace ApplicationStatusMonitor
                mongoIdentityOptions.UseDefaultIdentity = true;
                mongoIdentityOptions.ConnectionString = Configuration["StatusMonitorDatabaseSettings:ConnectionString"];
             })
+            .AddRoleManager<RoleManager<AppRole>>()
             .AddDefaultUI();
          
          services
@@ -119,10 +120,11 @@ namespace ApplicationStatusMonitor
                       }
                    };
                 });
+
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-      public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+      public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
       {
          if (env.IsDevelopment())
          {
@@ -146,11 +148,31 @@ namespace ApplicationStatusMonitor
          });
 
          app.UseStaticFiles();
+
+         CreateUserRoles(serviceProvider).Wait();
+      }
+
+      private async Task CreateUserRoles(IServiceProvider serviceProvider)
+      {
+         var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+         var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+
+         //Adding Admin Role
+         var roleCheck = await roleManager.RoleExistsAsync("Approved");
+         if (!roleCheck)
+         {
+            //create the roles and seed them to the database
+            var roleResult = await roleManager.CreateAsync(new AppRole("Approved"));
+         }
       }
    }
 
+
    public class AppRole : MongoRole
    {
+      public AppRole(string roleName) : base(roleName)
+      {
+      }
    }
 
    public class AppUser : MongoUser
