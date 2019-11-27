@@ -60,7 +60,7 @@ namespace ApplicationStatusMonitor
 
          services.AddIdentityMongoDbProvider<AppUser, AppRole>(identityOptions =>
             {
-               identityOptions.SignIn.RequireConfirmedAccount = true;
+               identityOptions.SignIn.RequireConfirmedAccount = false;
                identityOptions.Password.RequiredLength = 6;
                identityOptions.Password.RequireLowercase = false;
                identityOptions.Password.RequireUppercase = false;

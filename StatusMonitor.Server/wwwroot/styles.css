@@ -40,8 +40,13 @@ ul.statusList li.timeout {
    background-color: orange;
 }
 
+
 ul.statusList a:link, ul.statusList a:visited {
    color: #4b4b4b;
+}
+
+input[type=email] {
+   width: 260px;
 }
 
 @media screen and (min-width: 1280px) {
